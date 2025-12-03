@@ -31,7 +31,7 @@ function GameInner() {
           {gameOver && <div className="status">Game Over! 💥</div>}
           {gameWon && <div className="status">You Win! 🎉</div>}
 
-          <button type="button" onClick={resetGame} className="reset-btn">
+          <button type="button" onClick={resetGame} className="btn">
             New Game
           </button>
         </div>

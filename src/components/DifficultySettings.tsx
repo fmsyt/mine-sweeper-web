@@ -1,4 +1,6 @@
+import { useCallback } from "react";
 import { useGame } from "../contexts/GameContext";
+import type { Difficulty } from "../componentstypes";
 
 export function DifficultySettings() {
   const {
@@ -13,33 +15,46 @@ export function DifficultySettings() {
     toggleFlagAnimation,
     setHoldToFlagDurationMs,
   } = useGame();
+
+  const makeActiveClass = useCallback(
+    (label: Difficulty) => {
+      const classList = ["btn"];
+      if (difficulty === label) {
+        classList.push("active");
+      }
+
+      return classList.join(" ");
+    },
+    [difficulty],
+  );
+
   return (
     <div className="settings">
       <div className="difficulty-buttons">
         <button
           type="button"
-          className={difficulty === "beginner" ? "active" : ""}
+          className={makeActiveClass("beginner")}
           onClick={() => handleDifficultyChange("beginner")}
         >
           初級 (9×9, 10)
         </button>
         <button
           type="button"
-          className={difficulty === "intermediate" ? "active" : ""}
+          className={makeActiveClass("intermediate")}
           onClick={() => handleDifficultyChange("intermediate")}
         >
           中級 (16×16, 40)
         </button>
         <button
           type="button"
-          className={difficulty === "expert" ? "active" : ""}
+          className={makeActiveClass("expert")}
           onClick={() => handleDifficultyChange("expert")}
         >
           上級 (16×30, 99)
         </button>
         <button
           type="button"
-          className={difficulty === "custom" ? "active" : ""}
+          className={makeActiveClass("custom")}
           onClick={() => handleDifficultyChange("custom")}
         >
           カスタム
