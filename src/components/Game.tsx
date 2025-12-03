@@ -1,7 +1,7 @@
 import { GameProvider, useGame } from "../contexts/GameContext";
 import { LocalStorageProvider } from "../contexts/LocalStorageContext";
 import { DifficultySettings } from "./DifficultySettings";
-import "./game.css";
+import "../styles/game.css";
 import { GameBoard } from "./GameBoard";
 import { GameStatus } from "./GameStatus";
 
