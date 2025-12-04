@@ -1,11 +1,10 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Game from "../components/Game.tsx";
 ---
 
 <Layout>
   <div class="container">
-    <h1>Welcome to the Home Page</h1>
-    <p>This is the main landing page of the website.</p>
+    <Game client:only />
   </div>
 </Layout>
-
