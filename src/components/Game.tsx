@@ -1,7 +1,6 @@
 import { GameProvider, useGame } from "../contexts/GameContext";
-import { LocalStorageProvider } from "../contexts/LocalStorageContext";
-import { DifficultySettings } from "./DifficultySettings";
 import "../styles/game.css";
+import { DifficultySettings } from "./DifficultySettings";
 import { GameBoard } from "./GameBoard";
 import { GameStatus } from "./GameStatus";
 
@@ -40,11 +39,9 @@ function GameInner() {
 
 function Game() {
   return (
-    <LocalStorageProvider>
-      <GameProvider>
-        <GameInner />
-      </GameProvider>
-    </LocalStorageProvider>
+    <GameProvider>
+      <GameInner />
+    </GameProvider>
   );
 }
 

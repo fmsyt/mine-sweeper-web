@@ -1,6 +1,6 @@
 import {
-  type ReactNode,
   createContext,
+  type ReactNode,
   useContext,
   useEffect,
   useState,
@@ -13,7 +13,7 @@ import {
   revealAllMines,
 } from "../components/gameLogic";
 import type { Cell, Difficulty } from "../componentstypes";
-import { useLocalStorage } from "./LocalStorageContext";
+import { useLocalStorage } from "./localStorage";
 
 interface GameContextType {
   difficulty: Difficulty;

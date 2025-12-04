@@ -1,6 +1,6 @@
 import { useCallback } from "react";
-import { useGame } from "../contexts/GameContext";
 import type { Difficulty } from "../componentstypes";
+import { useGame } from "../contexts/GameContext";
 
 export function DifficultySettings() {
   const {
