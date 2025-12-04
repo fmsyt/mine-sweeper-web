@@ -9,9 +9,7 @@ function GameInner() {
   const { board, gameOver, gameWon, resetGame } = useGame();
 
   return (
-    <main className="container">
-      <h1>Minesweeper</h1>
-
+    <div>
       {!board && (
         <>
           <DifficultySettings />
@@ -36,7 +34,7 @@ function GameInner() {
           </button>
         </div>
       )}
-    </main>
+    </div>
   );
 }
 

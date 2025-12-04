@@ -124,105 +124,107 @@ export function GameBoard() {
     mouseDownCell.current = null;
   };
 
-  if (!board) {
-    return (
-      <div
-        className="board initial-board"
-        style={{
-          gridTemplateColumns: `repeat(${cols}, 32px)`,
-          gridTemplateRows: `repeat(${rows}, 32px)`,
-        }}
-      >
-        {Array(rows)
-          .fill(null)
-          .map((_, r) =>
-            Array(cols)
-              .fill(null)
-              .map((_, c) => (
+  return (
+    <div className="board-wrapper">
+      {!board && (
+        <div
+          className="board initial-board"
+          style={{
+            gridTemplateColumns: `repeat(${cols}, 32px)`,
+            gridTemplateRows: `repeat(${rows}, 32px)`,
+          }}
+        >
+          {Array(rows)
+            .fill(null)
+            .map((_, r) =>
+              Array(cols)
+                .fill(null)
+                .map((_, c) => (
+                  <button
+                    type="button"
+                    key={`${r}-${c}`}
+                    className="cell initial-cell"
+                    onMouseDown={() => handlePointerDown(r, c)}
+                    onMouseUp={() => handlePointerUp(r, c)}
+                  >
+                    <img src={closedImg.src} alt="cell" />
+                  </button>
+                )),
+            )}
+        </div>
+      )}
+
+      {!!board && (
+        <div
+          className="board"
+          style={{
+            gridTemplateColumns: `repeat(${cols}, 32px)`,
+            gridTemplateRows: `repeat(${rows}, 32px)`,
+          }}
+        >
+          {board.map((row, r) =>
+            row.map((cell, c) => {
+              const cellKey = `${r}-${c}`;
+              const isAnimating = animatingFlags.has(cellKey);
+              return (
                 <button
                   type="button"
-                  key={`${r}-${c}`}
-                  className="cell initial-cell"
-                  onMouseDown={() => handlePointerDown(r, c)}
-                  onMouseUp={() => handlePointerUp(r, c)}
-                >
-                  <img src={closedImg.src} alt="cell" />
-                </button>
-              )),
-          )}
-      </div>
-    );
-  }
+                  key={cellKey}
+                  className="cell"
+                  onMouseDown={(e) => {
+                    lastMouseButtonRef.current = e.button;
+                    handlePointerDown(r, c);
+                  }}
+                  onMouseUp={(_e) => {
+                    if (lastMouseButtonRef.current === null) {
+                      return;
+                    }
 
-  return (
-    <div
-      className="board"
-      style={{
-        gridTemplateColumns: `repeat(${cols}, 32px)`,
-        gridTemplateRows: `repeat(${rows}, 32px)`,
-      }}
-    >
-      {board.map((row, r) =>
-        row.map((cell, c) => {
-          const cellKey = `${r}-${c}`;
-          const isAnimating = animatingFlags.has(cellKey);
-          return (
-            <button
-              type="button"
-              key={cellKey}
-              className="cell"
-              onMouseDown={(e) => {
-                lastMouseButtonRef.current = e.button;
-                handlePointerDown(r, c);
-              }}
-              onMouseUp={(_e) => {
-                if (lastMouseButtonRef.current === null) {
-                  return;
-                }
+                    const button = lastMouseButtonRef.current;
+                    lastMouseButtonRef.current = null;
 
-                const button = lastMouseButtonRef.current;
-                lastMouseButtonRef.current = null;
+                    switch (button) {
+                      case 0: // 左クリック
+                        handlePointerUp(r, c);
+                        break;
 
-                switch (button) {
-                  case 0: // 左クリック
+                      case 2: // 右クリック
+                        handleMouseUp(r, c);
+                        break;
+                    }
+                  }}
+                  onPointerDown={(e) => {
+                    if (e.pointerType === "mouse") {
+                      // onMouseDownで処理しているので無視
+                      return;
+                    }
+                    e.preventDefault();
+                    handlePointerDown(r, c);
+                  }}
+                  onPointerUp={(e) => {
+                    if (e.pointerType === "mouse") {
+                      // onMouseUpで処理しているので無視
+                      return;
+                    }
+                    e.preventDefault();
                     handlePointerUp(r, c);
-                    break;
-
-                  case 2: // 右クリック
-                    handleMouseUp(r, c);
-                    break;
-                }
-              }}
-              onPointerDown={(e) => {
-                if (e.pointerType === "mouse") {
-                  // onMouseDownで処理しているので無視
-                  return;
-                }
-                e.preventDefault();
-                handlePointerDown(r, c);
-              }}
-              onPointerUp={(e) => {
-                if (e.pointerType === "mouse") {
-                  // onMouseUpで処理しているので無視
-                  return;
-                }
-                e.preventDefault();
-                handlePointerUp(r, c);
-              }}
-              onContextMenu={(e) => {
-                e.preventDefault();
-              }}
-            >
-              <img
-                src={getCellImage(cell, r, c, board, gameOver, rows).src}
-                alt="cell"
-                className={
-                  isAnimating && cell.state === "flagged" ? "flag-drop" : ""
-                }
-              />
-            </button>
-          );
-        }),
+                  }}
+                  onContextMenu={(e) => {
+                    e.preventDefault();
+                  }}
+                >
+                  <img
+                    src={getCellImage(cell, r, c, board, gameOver, rows).src}
+                    alt="cell"
+                    className={
+                      isAnimating && cell.state === "flagged" ? "flag-drop" : ""
+                    }
+                  />
+                </button>
+              );
+            }),
+          )}
+        </div>
       )}
     </div>
   );
