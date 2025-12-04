@@ -3,9 +3,19 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout>
-  <div class="container">
-    <h1>Welcome to the Home Page</h1>
-    <p>This is the main landing page of the website.</p>
-  </div>
+  <article class="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-base-300 to-base-100">
+    <section class="text-center space-y-12">
+      <h1 class="text-6xl md:text-8xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+        💣 マインスイーパー
+      </h1>
+
+      <a
+        href="/play"
+        class="btn btn-neutral btn-wide"
+      >
+        Start
+      </a>
+    </section>
+  </article>
 </Layout>
 
