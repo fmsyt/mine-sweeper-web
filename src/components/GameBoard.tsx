@@ -80,6 +80,7 @@ export function GameBoard() {
   const longPressTimer = useRef<number | null>(null);
   const longPressTriggered = useRef<boolean>(false);
 
+  const lockHandle = useRef<boolean>(false);
   const lastMouseButtonRef = useRef<number | null>(null);
 
   const handlePointerDown = (r: number, c: number) => {
@@ -88,6 +89,10 @@ export function GameBoard() {
     longPressTriggered.current = false;
 
     longPressTimer.current = window.setTimeout(() => {
+      if (lockHandle.current) {
+        return;
+      }
+
       longPressTriggered.current = true;
       handleCellRightClick(r, c);
     }, holdToFlagDurationMs);
@@ -171,6 +176,22 @@ export function GameBoard() {
                   type="button"
                   key={cellKey}
                   className="cell"
+                  onPointerDown={(e) => {
+                    if (e.pointerType === "mouse") {
+                      // onMouseDownで処理するので無視
+                      return;
+                    }
+                    e.preventDefault();
+                    handlePointerDown(r, c);
+                  }}
+                  onPointerUp={(e) => {
+                    if (e.pointerType === "mouse") {
+                      // onMouseUpで処理するのでので無視
+                      return;
+                    }
+                    e.preventDefault();
+                    handlePointerUp(r, c);
+                  }}
                   onMouseDown={(e) => {
                     lastMouseButtonRef.current = e.button;
                     handlePointerDown(r, c);
@@ -180,6 +201,7 @@ export function GameBoard() {
                       return;
                     }
 
+                    // 最後に押されたボタンに応じて処理を分岐
                     const button = lastMouseButtonRef.current;
                     lastMouseButtonRef.current = null;
 
@@ -193,24 +215,25 @@ export function GameBoard() {
                         break;
                     }
                   }}
-                  onPointerDown={(e) => {
-                    if (e.pointerType === "mouse") {
-                      // onMouseDownで処理しているので無視
-                      return;
-                    }
-                    e.preventDefault();
-                    handlePointerDown(r, c);
-                  }}
-                  onPointerUp={(e) => {
-                    if (e.pointerType === "mouse") {
-                      // onMouseUpで処理しているので無視
-                      return;
-                    }
-                    e.preventDefault();
-                    handlePointerUp(r, c);
-                  }}
                   onContextMenu={(e) => {
+                    // コンテキストメニューを表示しない
                     e.preventDefault();
+                  }}
+                  onTouchStart={(e) => {
+                    // 複数指でのタッチはロック
+                    if (e.touches.length > 1) {
+                      lockHandle.current = true;
+                    }
+                  }}
+                  onTouchMove={(_e) => {
+                    // スクロールなどで指が動いたらロック
+                    lockHandle.current = true;
+                  }}
+                  onTouchEnd={(e) => {
+                    // 全ての指が離れたらロック解除
+                    if (e.touches.length === 0) {
+                      lockHandle.current = false;
+                    }
                   }}
                 >
                   <img
