@@ -8,19 +8,16 @@ function GameInner() {
   const { board, gameOver, gameWon, resetGame } = useGame();
 
   return (
-    <div>
+    <div className="flex flex-col align-center items-center gap-4">
       {!board && (
         <>
           <DifficultySettings />
-
-          <div className="game-area">
-            <GameBoard />
-          </div>
+          <GameBoard />
         </>
       )}
 
       {board && (
-        <div className="game-area">
+        <div className="flex flex-col gap-4 items-stretch w-fit select-none touch-none">
           <GameStatus />
 
           <GameBoard />
@@ -28,9 +25,11 @@ function GameInner() {
           {gameOver && <div className="status">Game Over! 💥</div>}
           {gameWon && <div className="status">You Win! 🎉</div>}
 
-          <button type="button" onClick={resetGame} className="btn">
-            New Game
-          </button>
+          <div className="mx-auto">
+            <button type="button" onClick={resetGame} className="btn">
+              New Game
+            </button>
+          </div>
         </div>
       )}
     </div>

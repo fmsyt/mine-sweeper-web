@@ -29,8 +29,8 @@ export function DifficultySettings() {
   );
 
   return (
-    <div className="settings">
-      <div className="difficulty-buttons">
+    <div className="flex flex-col items-center align-center">
+      <div className="flex flex-row gap-2 justify-center flex-wrap">
         <button
           type="button"
           className={makeActiveClass("beginner")}
@@ -62,10 +62,10 @@ export function DifficultySettings() {
       </div>
 
       {difficulty === "custom" && (
-        <div className="custom-settings">
-          <div>
-            <label>
-              Rows:
+        <div>
+          <div className="flex flex-row gap-4 justify-center custom-settings">
+            <label className="input input-xs">
+              <span className="label">Rows</span>
               <input
                 type="number"
                 value={rows}
@@ -76,10 +76,8 @@ export function DifficultySettings() {
                 max="30"
               />
             </label>
-          </div>
-          <div>
-            <label>
-              Columns:
+            <label className="input input-xs">
+              <span className="label">Columns</span>
               <input
                 type="number"
                 value={cols}
@@ -90,10 +88,8 @@ export function DifficultySettings() {
                 max="30"
               />
             </label>
-          </div>
-          <div>
-            <label>
-              Mines:
+            <label className="input input-xs">
+              <span className="label">Mines</span>
               <input
                 type="number"
                 value={mineCount}
@@ -109,9 +105,10 @@ export function DifficultySettings() {
       )}
 
       <div className="animation-toggle">
-        <label>
+        <label className="label">
           <input
             type="checkbox"
+            className="checkbox"
             checked={showFlagAnimation}
             onChange={toggleFlagAnimation}
           />
@@ -120,10 +117,11 @@ export function DifficultySettings() {
       </div>
 
       <div className="hold-duration-setting">
-        <label>
+        <label className="flex flex-row justify-center align-center gap-2">
           長押し時間: {holdToFlagDurationMs}ms
           <input
             type="range"
+            className="slider"
             value={holdToFlagDurationMs}
             onChange={(e) => setHoldToFlagDurationMs(Number(e.target.value))}
             min="100"
@@ -132,8 +130,6 @@ export function DifficultySettings() {
           />
         </label>
       </div>
-
-      <p className="instruction">👇 Click any cell below to start the game!</p>
     </div>
   );
 }
