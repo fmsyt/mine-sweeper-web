@@ -22,8 +22,8 @@ function GameInner() {
 
           <GameBoard />
 
-          {gameOver && <div className="status">Game Over! 💥</div>}
-          {gameWon && <div className="status">You Win! 🎉</div>}
+          {gameOver && <div className="w-full text-center">Game Over! 💥</div>}
+          {gameWon && <div className="w-full text-center">You Win! 🎉</div>}
 
           <div className="mx-auto">
             <button type="button" onClick={resetGame} className="btn">
