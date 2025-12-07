@@ -33,7 +33,9 @@
   transition: filter 0.1s ease;
   padding: 0;
   border: none;
-  background: none;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
   outline: none;
 }
 
@@ -41,11 +43,60 @@
   filter: brightness(1.3);
 }
 
-.cell img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  pointer-events: none;
+.cell-closed {
+  background-image: url('/closed.svg');
+}
+
+.cell-flag {
+  background-image: url('/flag.svg');
+}
+
+.cell-mine {
+  background-image: url('/mine.svg');
+}
+
+.cell-mine-red {
+  background-image: url('/mine_red.svg');
+}
+
+.cell-mine-wrong {
+  background-image: url('/mine_wrong.svg');
+}
+
+.cell-type0 {
+  background-image: url('/type0.svg');
+}
+
+.cell-type1 {
+  background-image: url('/type1.svg');
+}
+
+.cell-type2 {
+  background-image: url('/type2.svg');
+}
+
+.cell-type3 {
+  background-image: url('/type3.svg');
+}
+
+.cell-type4 {
+  background-image: url('/type4.svg');
+}
+
+.cell-type5 {
+  background-image: url('/type5.svg');
+}
+
+.cell-type6 {
+  background-image: url('/type6.svg');
+}
+
+.cell-type7 {
+  background-image: url('/type7.svg');
+}
+
+.cell-type8 {
+  background-image: url('/type8.svg');
 }
 
 .flag-drop {
@@ -91,6 +142,49 @@
   width: 24px;
   height: 36px;
   display: block;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.digit-0 {
+  background-image: url('/d0.svg');
+}
+
+.digit-1 {
+  background-image: url('/d1.svg');
+}
+
+.digit-2 {
+  background-image: url('/d2.svg');
+}
+
+.digit-3 {
+  background-image: url('/d3.svg');
+}
+
+.digit-4 {
+  background-image: url('/d4.svg');
+}
+
+.digit-5 {
+  background-image: url('/d5.svg');
+}
+
+.digit-6 {
+  background-image: url('/d6.svg');
+}
+
+.digit-7 {
+  background-image: url('/d7.svg');
+}
+
+.digit-8 {
+  background-image: url('/d8.svg');
+}
+
+.digit-9 {
+  background-image: url('/d9.svg');
 }
 
 @keyframes pulse {

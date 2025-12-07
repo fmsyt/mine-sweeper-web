@@ -1,35 +1,9 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: cellKey */
 import { useRef } from "react";
-import closedImg from "../assets/game/closed.svg";
-import flagImg from "../assets/game/flag.svg";
-import mineImg from "../assets/game/mine.svg";
-import mineRedImg from "../assets/game/mine_red.svg";
-import mineWrongImg from "../assets/game/mine_wrong.svg";
-import type0Img from "../assets/game/type0.svg";
-import type1Img from "../assets/game/type1.svg";
-import type2Img from "../assets/game/type2.svg";
-import type3Img from "../assets/game/type3.svg";
-import type4Img from "../assets/game/type4.svg";
-import type5Img from "../assets/game/type5.svg";
-import type6Img from "../assets/game/type6.svg";
-import type7Img from "../assets/game/type7.svg";
-import type8Img from "../assets/game/type8.svg";
 import type { Cell } from "../componentstypes";
 import { useGame } from "../contexts/GameContext";
 
-const typeImages = [
-  type0Img,
-  type1Img,
-  type2Img,
-  type3Img,
-  type4Img,
-  type5Img,
-  type6Img,
-  type7Img,
-  type8Img,
-];
-
-const getCellImage = (
+const getCellClass = (
   cell: Cell,
   r: number,
   c: number,
@@ -39,11 +13,11 @@ const getCellImage = (
 ) => {
   if (cell.state === "flagged") {
     if (gameOver && !cell.isMine) {
-      return mineWrongImg;
+      return "cell-mine-wrong";
     }
-    return flagImg;
+    return "cell-flag";
   }
-  if (cell.state === "closed") return closedImg;
+  if (cell.state === "closed") return "cell-closed";
   if (cell.isMine) {
     if (gameOver && board) {
       for (let i = 0; i < rows; i++) {
@@ -54,14 +28,14 @@ const getCellImage = (
             i === r &&
             j === c
           ) {
-            return mineRedImg;
+            return "cell-mine-red";
           }
         }
       }
     }
-    return mineImg;
+    return "cell-mine";
   }
-  return typeImages[cell.adjacentMines];
+  return `cell-type${cell.adjacentMines}`;
 };
 
 export function GameBoard() {
@@ -148,12 +122,10 @@ export function GameBoard() {
                   <button
                     type="button"
                     key={`${r}-${c}`}
-                    className="cell initial-cell"
+                    className="cell initial-cell cell-closed"
                     onMouseDown={() => handlePointerDown(r, c)}
                     onMouseUp={() => handlePointerUp(r, c)}
-                  >
-                    <img src={closedImg.src} alt="cell" />
-                  </button>
+                  />
                 )),
             )}
         </div>
@@ -175,7 +147,9 @@ export function GameBoard() {
                 <button
                   type="button"
                   key={cellKey}
-                  className="cell"
+                  className={`cell ${getCellClass(cell, r, c, board, gameOver, rows)} ${
+                    isAnimating && cell.state === "flagged" ? "flag-drop" : ""
+                  }`}
                   onPointerDown={(e) => {
                     if (e.pointerType === "mouse") {
                       // onMouseDownで処理するので無視
@@ -235,15 +209,7 @@ export function GameBoard() {
                       lockHandle.current = false;
                     }
                   }}
-                >
-                  <img
-                    src={getCellImage(cell, r, c, board, gameOver, rows).src}
-                    alt="cell"
-                    className={
-                      isAnimating && cell.state === "flagged" ? "flag-drop" : ""
-                    }
-                  />
-                </button>
+                />
               );
             }),
           )}
