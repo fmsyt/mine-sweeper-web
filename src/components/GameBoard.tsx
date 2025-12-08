@@ -106,7 +106,7 @@ export function GameBoard() {
   return (
     <div
       className="board-wrapper"
-      omScroll={(_e) => {
+      onScroll={(_e) => {
         // スクロール時にロック
         lockHandle.current = true;
       }}
@@ -149,12 +149,20 @@ export function GameBoard() {
             row.map((cell, c) => {
               const cellKey = `${r}-${c}`;
               const isAnimating = animatingFlags.has(cellKey);
+
+              const classNames = [
+                "cell",
+                getCellClass(cell, r, c, board, gameOver, rows),
+                ...(isAnimating && cell.state === "flagged"
+                  ? ["flag-drop"]
+                  : []),
+              ];
+
               return (
                 <button
                   type="button"
                   key={cellKey}
-                  className={`cell ${getCellClass(cell, r, c, board, gameOver, rows)} ${isAnimating && cell.state === "flagged" ? "flag-drop" : ""
-                    }`}
+                  className={classNames.join(" ")}
                   onPointerDown={(e) => {
                     if (e.pointerType === "mouse") {
                       // onMouseDownで処理するので無視
