@@ -177,7 +177,7 @@ export function GameBoard() {
   );
 
   return (
-    <div className="border-wrapper">
+    <div className="board-wrapper">
       <TransformWrapper
         smooth={false}
         centerOnInit={true}
