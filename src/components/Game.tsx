@@ -5,7 +5,7 @@ import { GameBoard } from "./GameBoard";
 import { GameStatus } from "./GameStatus";
 
 function GameInner() {
-  const { board, gameOver, gameWon, resetGame } = useGame();
+  const { board, gameOver, gameWon } = useGame();
 
   return (
     <div className="flex flex-col align-center items-center gap-4">
@@ -24,12 +24,6 @@ function GameInner() {
 
           {gameOver && <div className="w-full text-center">Game Over! 💥</div>}
           {gameWon && <div className="w-full text-center">You Win! 🎉</div>}
-
-          <div className="mx-auto">
-            <button type="button" onClick={resetGame} className="btn">
-              New Game
-            </button>
-          </div>
         </div>
       )}
     </div>

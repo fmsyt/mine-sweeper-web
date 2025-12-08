@@ -18,9 +18,9 @@ export function DifficultySettings() {
 
   const makeActiveClass = useCallback(
     (label: Difficulty) => {
-      const classList = ["btn"];
+      const classList = ["btn", "btn-primary", "flex-1", "text-nowrap"];
       if (difficulty === label) {
-        classList.push("active");
+        classList.push("btn-active");
       }
 
       return classList.join(" ");
@@ -29,28 +29,28 @@ export function DifficultySettings() {
   );
 
   return (
-    <div className="flex flex-col items-center align-center">
+    <div className="flex flex-col items-center align-center gap-4 pt-4">
       <div className="flex flex-row gap-2 justify-center flex-wrap">
         <button
           type="button"
           className={makeActiveClass("beginner")}
           onClick={() => handleDifficultyChange("beginner")}
         >
-          初級 (9×9, 10)
+          初級
         </button>
         <button
           type="button"
           className={makeActiveClass("intermediate")}
           onClick={() => handleDifficultyChange("intermediate")}
         >
-          中級 (16×16, 40)
+          中級
         </button>
         <button
           type="button"
           className={makeActiveClass("expert")}
           onClick={() => handleDifficultyChange("expert")}
         >
-          上級 (16×30, 99)
+          上級
         </button>
         <button
           type="button"
@@ -61,48 +61,40 @@ export function DifficultySettings() {
         </button>
       </div>
 
-      {difficulty === "custom" && (
-        <div>
-          <div className="flex flex-row gap-4 justify-center custom-settings">
-            <label className="input input-xs">
-              <span className="label">Rows</span>
-              <input
-                type="number"
-                value={rows}
-                onChange={(e) =>
-                  handleCustomChange("rows", Number(e.target.value))
-                }
-                min="5"
-                max="30"
-              />
-            </label>
-            <label className="input input-xs">
-              <span className="label">Columns</span>
-              <input
-                type="number"
-                value={cols}
-                onChange={(e) =>
-                  handleCustomChange("cols", Number(e.target.value))
-                }
-                min="5"
-                max="30"
-              />
-            </label>
-            <label className="input input-xs">
-              <span className="label">Mines</span>
-              <input
-                type="number"
-                value={mineCount}
-                onChange={(e) =>
-                  handleCustomChange("mines", Number(e.target.value))
-                }
-                min="1"
-                max={rows * cols - 9}
-              />
-            </label>
-          </div>
-        </div>
-      )}
+      <div className="flex flex-row gap-4 justify-center custom-settings">
+        <label className="input input-xs">
+          <span className="label">Rows</span>
+          <input
+            type="number"
+            value={rows}
+            onChange={(e) => handleCustomChange("rows", Number(e.target.value))}
+            min="5"
+            max="30"
+          />
+        </label>
+        <label className="input input-xs">
+          <span className="label">Columns</span>
+          <input
+            type="number"
+            value={cols}
+            onChange={(e) => handleCustomChange("cols", Number(e.target.value))}
+            min="5"
+            max="30"
+          />
+        </label>
+        <label className="input input-xs">
+          <span className="label">Mines</span>
+          <input
+            type="number"
+            value={mineCount}
+            onChange={(e) =>
+              handleCustomChange("mines", Number(e.target.value))
+            }
+            min="1"
+            max={rows * cols - 9}
+          />
+        </label>
+      </div>
 
       <div className="animation-toggle">
         <label className="label">
