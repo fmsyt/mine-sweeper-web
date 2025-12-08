@@ -4,16 +4,25 @@ import Layout from "../layouts/Layout.astro";
 
 <Layout>
   <article class="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-base-300 to-base-100">
-    <section class="text-center space-y-12">
-      <h1 class="text-6xl md:text-8xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-        💣 マインスイーパー
-      </h1>
+    <section class="text-center space-y-12 max-w-4xl">
+      <div class="flex items-center justify-center gap-2 sm:gap-4">
+        <img src="/mine.svg" alt="Mine icon" class="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20" />
+        <h1 class="text-4xl sm:text-6xl md:text-8xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent whitespace-nowrap">
+          マインスイーパー
+        </h1>
+        <img src="/flag.svg" alt="Flag icon" class="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20" />
+      </div>
+
+      <p class="text-base sm:text-lg md:text-xl text-base-content/80 max-w-md mx-auto px-4">
+        クラシックなマインスイーパーゲーム<br />
+        マウス操作・タッチ操作の両方に対応
+      </p>
 
       <a
         href="/play"
         class="btn btn-neutral btn-wide"
       >
-        Start
+        ゲームを始める
       </a>
     </section>
   </article>
