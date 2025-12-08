@@ -1,5 +1,5 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: cellKey */
-import { useCallback, useRef, useState } from "react";
+import { Fragment, useCallback, useRef, useState } from "react";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import type { Cell } from "../componentstypes";
 import { useGame } from "../contexts/GameContext";
@@ -177,7 +177,7 @@ export function GameBoard() {
   );
 
   return (
-    <div className="board-wrapper">
+    <Fragment>
       <TransformWrapper
         centerOnInit={true}
         doubleClick={{ disabled: true }}
@@ -206,8 +206,8 @@ export function GameBoard() {
         }}
       >
         <TransformComponent
+          contentClass="border-wrapper"
           wrapperStyle={{
-            border: "2px solid red",
             maxWidth: "100%",
             maxHeight: "100%",
           }}
@@ -354,6 +354,6 @@ export function GameBoard() {
           ))}
         </div>
       )}
-    </div>
+    </Fragment>
   );
 }
