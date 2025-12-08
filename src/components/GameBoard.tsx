@@ -182,7 +182,7 @@ export function GameBoard() {
         smooth={false}
         centerOnInit={true}
         doubleClick={{ disabled: true }}
-        minScale={0.5}
+        minScale={0.1}
         maxScale={4}
         initialScale={1}
         panning={{ velocityDisabled: true, allowRightClickPan: false }}
