@@ -177,13 +177,15 @@ export function GameBoard() {
   );
 
   return (
-    <Fragment>
+    <div className="border-wrapper">
       <TransformWrapper
+        smooth={false}
         centerOnInit={true}
         doubleClick={{ disabled: true }}
         minScale={0.5}
         maxScale={4}
         initialScale={1}
+        panning={{ velocityDisabled: true, allowRightClickPan: false }}
         onPanningStart={(_ref, e) => {
           addLog({ message: `${e.type}: onPanningStart` });
           // setLockState(true, "onPanningStart");
@@ -206,7 +208,6 @@ export function GameBoard() {
         }}
       >
         <TransformComponent
-          contentClass="border-wrapper"
           wrapperStyle={{
             maxWidth: "100%",
             maxHeight: "100%",
@@ -354,6 +355,6 @@ export function GameBoard() {
           ))}
         </div>
       )}
-    </Fragment>
+    </div>
   );
 }
