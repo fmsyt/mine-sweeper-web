@@ -5,7 +5,7 @@ import type { Cell } from "../componentstypes";
 import { useGame } from "../contexts/GameContext";
 
 const showDebugLogs = false;
-const showDebugOnConsole = true;
+const showDebugOnConsole = false;
 
 const getCellClass = (
   cell: Cell,
@@ -52,7 +52,7 @@ function useLogger() {
 
   const addLog = useCallback((log: LogEntry) => {
     if (showDebugOnConsole) {
-      console.log(log.message);
+      console.debug(log.message);
     }
 
     if (!showDebugLogs) {
@@ -62,9 +62,14 @@ function useLogger() {
     setLogs((prevLogs) => [...prevLogs, log]);
   }, []);
 
+  const clearLogs = useCallback(() => {
+    setLogs([]);
+  }, []);
+
   return {
     logs,
     addLog,
+    clearLogs,
   };
 }
 
@@ -86,7 +91,7 @@ export function GameBoard() {
     handleCellRightClick,
   } = useGame();
 
-  const { logs, addLog } = useLogger();
+  const { logs, addLog, clearLogs } = useLogger();
 
   const mouseDownTime = useRef<number | null>(null);
   const mouseDownCell = useRef<{ r: number; c: number } | null>(null);
@@ -96,18 +101,19 @@ export function GameBoard() {
   const lastMouseButtonRef = useRef<number | null>(null);
 
   const setLockState = useCallback(
-    (state: boolean, debugMessage?: string) => {
-      if (_lockHandle.current === state) {
+    (toLock: boolean, debugMessage?: string) => {
+      if (_lockHandle.current === toLock) {
         return;
       }
 
-      _lockHandle.current = state;
-      if (state && longPressTimerHandler.current !== null) {
+      _lockHandle.current = toLock;
+      if (toLock && longPressTimerHandler.current !== null) {
         clearTimeout(longPressTimerHandler.current);
+        longPressTimerHandler.current = null;
       }
 
       if (debugMessage) {
-        addLog({ message: `🔒Set lock state to ${state} ${debugMessage}` });
+        addLog({ message: `🔒Set lock state to ${toLock} ${debugMessage}` });
       }
     },
     [addLog],
@@ -117,6 +123,13 @@ export function GameBoard() {
     (r: number, c: number) => {
       mouseDownTime.current = Date.now();
       mouseDownCell.current = { r, c };
+
+      if (longPressTimerHandler.current !== null) {
+        addLog({ message: `⌛Clear existing long press timer` });
+        clearTimeout(longPressTimerHandler.current);
+      }
+
+      addLog({ message: `⌛Start long press timer for cell (${r}, ${c})` });
 
       longPressTimerHandler.current = window.setTimeout(() => {
         addLog({ message: `Long press detected on cell (${r}, ${c})` });
@@ -188,7 +201,7 @@ export function GameBoard() {
         panning={{ velocityDisabled: true, allowRightClickPan: false }}
         onPanningStart={(_ref, e) => {
           addLog({ message: `${e.type}: onPanningStart` });
-          // setLockState(true, "onPanningStart");
+          setLockState(true, "onPanningStart");
         }}
         onPanning={(_ref, e) => {
           addLog({ message: `${e.type}: onPanning` });
@@ -196,7 +209,7 @@ export function GameBoard() {
         }}
         onPinchingStart={(_ref, e) => {
           addLog({ message: `${e.type}: onPinchingStart` });
-          // lockHandle.current = true;
+          setLockState(true, "onPinchingStart");
         }}
         onZoomStart={(_ref, e) => {
           addLog({ message: `${e.type}: onZoomStart` });
@@ -265,7 +278,9 @@ export function GameBoard() {
                       key={cellKey}
                       className={classNames.join(" ")}
                       onPointerDown={(e) => {
-                        addLog({ message: e.type });
+                        addLog({
+                          message: `${e.type}: pointerType: ${e.pointerType}`,
+                        });
                         if (e.pointerType === "mouse") {
                           // onMouseDownで処理するので無視
                           return;
@@ -319,7 +334,9 @@ export function GameBoard() {
                         e.preventDefault();
                       }}
                       onTouchStart={(e) => {
-                        addLog({ message: e.type });
+                        addLog({
+                          message: `${e.type}: touches: ${e.touches.length}`,
+                        });
                         // 複数指でのタッチはロック
                         if (e.touches.length > 1) {
                           setLockState(true, "onTouchStart multiple touches");
@@ -331,7 +348,9 @@ export function GameBoard() {
                         setLockState(true, "onTouchMove");
                       }}
                       onTouchEnd={(e) => {
-                        addLog({ message: e.type });
+                        addLog({
+                          message: `${e.type}: touches: ${e.touches.length}`,
+                        });
                         // 全ての指が離れたらロック解除
                         if (e.touches.length === 0) {
                           setLockState(false, "onTouchEnd");
@@ -347,12 +366,21 @@ export function GameBoard() {
       </TransformWrapper>
 
       {showDebugLogs && (
-        <div className="event-log mt-4 max-h-32 overflow-y-auto w-full">
-          {[...logs].reverse().map((log, index) => (
-            <div key={index} className="text-xs font-mono">
-              {`${logs.length - index}: ${log.message}`}
-            </div>
-          ))}
+        <div>
+          <div className="event-log mt-4 max-h-32 overflow-y-auto w-full">
+            {[...logs].reverse().map((log, index) => (
+              <div key={index} className="text-xs font-mono">
+                {`${logs.length - index}: ${log.message}`}
+              </div>
+            ))}
+          </div>
+          <button
+            type="button"
+            className="btn btn-sm btn-secondary mt-2"
+            onClick={clearLogs}
+          >
+            ログをクリア
+          </button>
         </div>
       )}
     </div>
