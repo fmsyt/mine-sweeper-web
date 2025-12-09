@@ -4,17 +4,17 @@ import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import type { Cell } from "../componentstypes";
 import { useGame } from "../contexts/GameContext";
 
-const showDebugLogs = false;
+const showDebugLogs = true;
 const showDebugOnConsole = false;
 
-const getCellClass = (
+function getCellClass(
   cell: Cell,
   r: number,
   c: number,
   board: Cell[][] | null,
   gameOver: boolean,
   rows: number,
-) => {
+) {
   if (cell.state === "flagged") {
     if (gameOver && !cell.isMine) {
       return "cell-mine-wrong";
@@ -40,11 +40,12 @@ const getCellClass = (
     return "cell-mine";
   }
   return `cell-type${cell.adjacentMines}`;
-};
+}
 
 type LogEntry = {
   message: string;
   className?: string;
+  duplicateCount?: number;
 };
 
 function useLogger() {
@@ -59,7 +60,19 @@ function useLogger() {
       return;
     }
 
-    setLogs((prevLogs) => [...prevLogs, log]);
+    setLogs((prevLogs) => {
+      const lastLog = prevLogs[prevLogs.length - 1] || null;
+
+      if (lastLog?.message === log.message) {
+        const count = lastLog?.duplicateCount || 0;
+        lastLog.duplicateCount = count + 1;
+
+        return [...prevLogs.slice(0, -1), lastLog];
+      }
+
+      const next = [...prevLogs, log];
+      return next;
+    });
   }, []);
 
   const clearLogs = useCallback(() => {
@@ -102,10 +115,6 @@ export function GameBoard() {
 
   const setLockState = useCallback(
     (toLock: boolean, debugMessage?: string) => {
-      if (_lockHandle.current === toLock) {
-        return;
-      }
-
       _lockHandle.current = toLock;
       if (toLock && longPressTimerHandler.current !== null) {
         clearTimeout(longPressTimerHandler.current);
@@ -201,7 +210,7 @@ export function GameBoard() {
         panning={{ velocityDisabled: true, allowRightClickPan: false }}
         onPanningStart={(_ref, e) => {
           addLog({ message: `${e.type}: onPanningStart` });
-          setLockState(true, "onPanningStart");
+          // setLockState(true, "onPanningStart");
         }}
         onPanning={(_ref, e) => {
           addLog({ message: `${e.type}: onPanning` });
@@ -223,18 +232,18 @@ export function GameBoard() {
         <TransformComponent
           wrapperStyle={{
             maxWidth: "100%",
-            maxHeight: "100%",
+            maxHeight: "max(100%,50vh)",
           }}
         >
-          {!board && (
-            <div
-              className="board initial-board"
-              style={{
-                gridTemplateColumns: `repeat(${cols}, 32px)`,
-                gridTemplateRows: `repeat(${rows}, 32px)`,
-              }}
-            >
-              {Array(rows)
+          <div
+            className="board"
+            style={{
+              gridTemplateColumns: `repeat(${cols}, 32px)`,
+              gridTemplateRows: `repeat(${rows}, 32px)`,
+            }}
+          >
+            {!board &&
+              Array(rows)
                 .fill(null)
                 .map((_, r) =>
                   Array(cols)
@@ -242,24 +251,15 @@ export function GameBoard() {
                     .map((_, c) => (
                       <button
                         type="button"
-                        key={`${r}-${c}`}
+                        key={`init-${r}-${c}`}
                         className="cell initial-cell cell-closed"
                         onMouseUp={() => handleCellOpen(r, c, true)}
                       />
                     )),
                 )}
-            </div>
-          )}
 
-          {!!board && (
-            <div
-              className="board"
-              style={{
-                gridTemplateColumns: `repeat(${cols}, 32px)`,
-                gridTemplateRows: `repeat(${rows}, 32px)`,
-              }}
-            >
-              {board.map((row, r) =>
+            {!!board &&
+              board.map((row, r) =>
                 row.map((cell, c) => {
                   const cellKey = `${r}-${c}`;
                   const isAnimating = animatingFlags.has(cellKey);
@@ -286,7 +286,11 @@ export function GameBoard() {
                           return;
                         }
                         e.preventDefault();
+
                         handlePointerDown(r, c);
+                        if (!_lockHandle.current) {
+                          // handlePointerDown(r, c);
+                        }
                       }}
                       onPointerUp={(e) => {
                         addLog({ message: e.type });
@@ -340,6 +344,7 @@ export function GameBoard() {
                         // 複数指でのタッチはロック
                         if (e.touches.length > 1) {
                           setLockState(true, "onTouchStart multiple touches");
+                          clearTimer();
                         }
                       }}
                       onTouchMove={(e) => {
@@ -360,27 +365,31 @@ export function GameBoard() {
                   );
                 }),
               )}
-            </div>
-          )}
+          </div>
         </TransformComponent>
       </TransformWrapper>
 
       {showDebugLogs && (
-        <div>
-          <div className="event-log mt-4 max-h-32 overflow-y-auto w-full">
-            {[...logs].reverse().map((log, index) => (
-              <div key={index} className="text-xs font-mono">
-                {`${logs.length - index}: ${log.message}`}
-              </div>
-            ))}
-          </div>
+        <div className="flex flex-col items-center mt-4 p-2 border border-gray-300 rounded w-full">
           <button
             type="button"
-            className="btn btn-sm btn-secondary mt-2"
+            className="btn btn-sm btn-secondary mb-2"
             onClick={clearLogs}
           >
             ログをクリア
           </button>
+          <div className="event-log mt-4 max-h-32 overflow-auto w-full">
+            {[...logs].reverse().map((log, index) => (
+              <div key={index} className="text-xs font-mono">
+                {`${logs.length - index}: ${log.message}`}
+                {log.duplicateCount && log.duplicateCount > 0 && (
+                  <span className="text-gray-500">
+                    {` (x${log.duplicateCount + 1})`}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
