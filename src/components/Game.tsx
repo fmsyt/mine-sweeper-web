@@ -1,7 +1,7 @@
 import { GameProvider, useGame } from "../contexts/GameContext";
 import "../styles/game.css";
 import { DifficultySettings } from "./DifficultySettings";
-import { GameBoard } from "./GameBoardExperimental";
+import { GameBoard } from "./GameBoard";
 import { GameStatus } from "./GameStatus";
 
 function GameInner() {
