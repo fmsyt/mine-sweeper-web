@@ -101,10 +101,6 @@ export function GameBoard() {
     (callback: ChangeCellStateCallback) => {
       const { getState } = controllerRef.current || {};
 
-      const cleanup = () => {
-        controllerRef.current = null;
-      };
-
       const promiseState = getState?.() || null;
       if (promiseState === "resolved") {
         addLog({ message: `Long press already handled, skipping callback` });
