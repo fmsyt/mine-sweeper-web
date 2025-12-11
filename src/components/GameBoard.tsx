@@ -89,6 +89,14 @@ export function GameBoard() {
     controllerRef.current.abort();
   }, []);
 
+  const handleCleanup = useCallback(() => {
+    if (controllerRef.current) {
+      controllerRef.current.abort();
+    }
+
+    controllerRef.current = null;
+  }, []);
+
   const handleChangeCellState = useCallback(
     (callback: ChangeCellStateCallback) => {
       const { getState } = controllerRef.current || {};
@@ -100,7 +108,6 @@ export function GameBoard() {
       const promiseState = getState?.() || null;
       if (promiseState === "resolved") {
         addLog({ message: `Long press already handled, skipping callback` });
-        cleanup();
         return;
       }
 
@@ -112,8 +119,6 @@ export function GameBoard() {
         playClickSound();
         callback();
       }
-
-      cleanup();
     },
     [addLog],
   );
@@ -243,6 +248,8 @@ export function GameBoard() {
                         handleChangeCellState(() => {
                           handleCellClick(r, c);
                         });
+
+                        handleCleanup();
                       }}
                       onMouseDown={(e) => {
                         addLog({ message: e.type });
@@ -280,6 +287,8 @@ export function GameBoard() {
                             });
                             break;
                         }
+
+                        handleCleanup();
                       }}
                       onContextMenu={(e) => {
                         addLog({ message: e.type });
