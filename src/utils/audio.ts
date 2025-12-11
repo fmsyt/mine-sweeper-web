@@ -4,7 +4,9 @@ class AudioManager {
 
   private getAudioContext(): AudioContext {
     if (!this.audioContext) {
-      this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      this.audioContext = new (
+        window.AudioContext || (window as any).webkitAudioContext
+      )();
     }
     return this.audioContext;
   }
@@ -16,8 +18,9 @@ class AudioManager {
 
     const response = await fetch(url);
     const arrayBuffer = await response.arrayBuffer();
-    const audioBuffer = await this.getAudioContext().decodeAudioData(arrayBuffer);
-    
+    const audioBuffer =
+      await this.getAudioContext().decodeAudioData(arrayBuffer);
+
     this.audioBuffers.set(url, audioBuffer);
     return audioBuffer;
   }
@@ -26,24 +29,24 @@ class AudioManager {
     try {
       const audioBuffer = await this.loadSound(url);
       const context = this.getAudioContext();
-      
+
       const source = context.createBufferSource();
       const gainNode = context.createGain();
-      
+
       source.buffer = audioBuffer;
       gainNode.gain.value = Math.max(0, Math.min(1, volume));
-      
+
       source.connect(gainNode);
       gainNode.connect(context.destination);
-      
+
       source.start(0);
     } catch (error) {
-      console.error('Failed to play sound:', error);
+      console.error("Failed to play sound:", error);
     }
   }
 
   async preloadSounds(urls: string[]): Promise<void> {
-    await Promise.all(urls.map(url => this.loadSound(url)));
+    await Promise.all(urls.map((url) => this.loadSound(url)));
   }
 
   dispose(): void {
@@ -58,9 +61,9 @@ class AudioManager {
 export const audioManager = new AudioManager();
 
 export async function playClickSound(volume = 1.0): Promise<void> {
-  await audioManager.playSound('/click.mp3', volume);
+  await audioManager.playSound("/click.mp3", volume);
 }
 
 export async function preloadClickSound(): Promise<void> {
-  await audioManager.preloadSounds(['/click.mp3']);
+  await audioManager.preloadSounds(["/click.mp3"]);
 }

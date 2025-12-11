@@ -3,7 +3,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import type { Cell } from "../componentstypes";
 import { useGame } from "../contexts/GameContext";
-import { playClickSound, preloadClickSound } from "../utils/audio";
 
 const showDebugLogs = import.meta.env.DEV && true;
 const showDebugOnConsole = import.meta.env.DEV && false;
@@ -31,10 +30,6 @@ export function GameBoard() {
 
   const { logs, addLog, clearLogs } = useLogger();
 
-  useEffect(() => {
-    preloadClickSound();
-  }, []);
-
   const controllerRef = useRef<{
     abort: () => void;
     getState: () => "pending" | "resolved" | "rejected";
@@ -54,7 +49,6 @@ export function GameBoard() {
         const timerId = window.setTimeout(() => {
           state = "resolved";
           addLog({ message: `Long press detected on cell (${r}, ${c})` });
-          playClickSound();
           handleCellRightClick(r, c);
           resolve();
         }, holdToFlagDurationMs);
@@ -112,7 +106,6 @@ export function GameBoard() {
 
       // rejectされていなければcallbackを実行
       if (promiseState === "pending") {
-        playClickSound();
         callback();
       }
     },

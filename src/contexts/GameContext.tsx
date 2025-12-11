@@ -3,6 +3,7 @@ import {
   type ReactNode,
   useContext,
   useEffect,
+  useLayoutEffect,
   useState,
 } from "react";
 import { DIFFICULTY_PRESETS } from "../components/constants";
@@ -13,6 +14,7 @@ import {
   revealAllMines,
 } from "../components/gameLogic";
 import type { Cell, Difficulty } from "../componentstypes";
+import { playClickSound, preloadClickSound } from "../utils/audio";
 import { useLocalStorage } from "./localStorage";
 
 interface GameContextType {
@@ -60,6 +62,10 @@ export function GameProvider({ children }: { children: ReactNode }) {
     config.holdToFlagDurationMs ?? 500,
   );
   const [animatingFlags, setAnimatingFlags] = useState<Set<string>>(new Set());
+
+  useLayoutEffect(() => {
+    preloadClickSound();
+  }, []);
 
   useEffect(() => {
     if (gameOver || gameWon || firstClick) {
@@ -125,6 +131,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
       setBoard(newBoard);
       setFirstClick(false);
       setElapsedTime(0);
+      playClickSound();
+
       if (checkWin(newBoard, rows, cols)) {
         setGameWon(true);
       }
@@ -141,6 +149,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
       const adjacentMines = newBoard[r][c].adjacentMines;
       let flaggedCount = 0;
 
+      let playedSound = false;
+
       for (let dr = -1; dr <= 1; dr++) {
         for (let dc = -1; dc <= 1; dc++) {
           if (dr === 0 && dc === 0) continue;
@@ -153,6 +163,10 @@ export function GameProvider({ children }: { children: ReactNode }) {
             nc < cols &&
             newBoard[nr][nc].state === "flagged"
           ) {
+            if (!playedSound) {
+              playClickSound();
+              playedSound = true;
+            }
             flaggedCount++;
           }
         }
@@ -183,6 +197,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
         }
       }
     } else if (newBoard[r][c].state === "closed") {
+      playClickSound();
       if (newBoard[r][c].isMine) {
         setGameOver(true);
         newBoard[r][c].state = "opened";
@@ -218,9 +233,11 @@ export function GameProvider({ children }: { children: ReactNode }) {
           });
         }, 400);
       }
+      playClickSound();
     } else if (newBoard[r][c].state === "flagged") {
       newBoard[r][c].state = "closed";
       setFlagCount((prev) => prev - 1);
+      playClickSound();
     }
 
     setBoard(newBoard);
