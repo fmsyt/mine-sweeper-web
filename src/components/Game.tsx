@@ -20,23 +20,22 @@ function GameInner() {
 
   return (
     <div className="flex flex-col align-center items-center justify-center gap-4 h-svh">
-      {!board && (
-        <>
-          <DifficultySettings />
+      {!board && <DifficultySettings />}
+
+      <div className="grid grid-cols-3 flex-col gap-4 items-center justify-items-center w-fit select-none touch-none">
+        <GameStatus />
+
+        <div className="col-span-3 outline outline-2 outline-gray-400">
           <GameBoard />
-        </>
-      )}
-
-      {board && (
-        <div className="flex flex-col gap-4 items-stretch w-fit select-none touch-none">
-          <GameStatus />
-
-          <GameBoard />
-
-          {gameOver && <div className="w-full text-center">Game Over! 💥</div>}
-          {gameWon && <div className="w-full text-center">You Win! 🎉</div>}
         </div>
-      )}
+
+        {gameOver && (
+          <div className="w-full text-center col-span-3">Game Over! 💥</div>
+        )}
+        {gameWon && (
+          <div className="w-full text-center col-span-3">You Win! 🎉</div>
+        )}
+      </div>
 
       <dialog ref={dialogRef} className="modal">
         <div className="modal-box">

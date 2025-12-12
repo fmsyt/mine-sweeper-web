@@ -1,5 +1,6 @@
 :root {
   --board-padding: 4px;
+  --cell-size: 36px;
 }
 
 .game-area {
@@ -13,22 +14,14 @@
   -webkit-user-select: none;
 }
 
-.board-wrapper {
-  width: fit-content;
-  max-width: calc(100svw - var(--board-padding) * 2);
-  max-height: calc(80svh - var(--board-padding) * 2 - 6rem);
-  border: 4px solid #c0c0c0;
-  overflow: auto;
-}
-
 .board {
   display: grid;
   gap: 0;
 }
 
 .cell {
-  width: 32px;
-  height: 32px;
+  width: var(--cell-size);
+  height: var(--cell-size);
   cursor: pointer;
   user-select: none;
   transition: filter 0.1s ease;

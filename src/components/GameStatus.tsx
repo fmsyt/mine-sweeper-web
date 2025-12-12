@@ -5,7 +5,7 @@ export function GameStatus() {
   const { mineCount, flagCount, elapsedTime, resetGame } = useGame();
   const minesRemaining = mineCount - flagCount;
   return (
-    <div className="game-status">
+    <>
       <DigitDisplay value={minesRemaining} />
       <button
         type="button"
@@ -16,6 +16,6 @@ export function GameStatus() {
         😌
       </button>
       <DigitDisplay value={elapsedTime} />
-    </div>
+    </>
   );
 }
