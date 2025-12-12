@@ -1,5 +1,5 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: cellKey */
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import type { Cell } from "../componentstypes";
 import { useGame } from "../contexts/GameContext";
@@ -45,7 +45,7 @@ export function GameBoard() {
 
       let state: "pending" | "resolved" | "rejected" = "pending";
 
-      const promise: CellOpenPromise = new Promise((resolve, reject) => {
+      const promise: CellOpenPromise = new Promise((resolve) => {
         const timerId = window.setTimeout(() => {
           state = "resolved";
           addLog({ message: `Long press detected on cell (${r}, ${c})` });
@@ -61,7 +61,7 @@ export function GameBoard() {
           });
 
           clearTimeout(timerId);
-          reject();
+          resolve();
         });
       });
 
