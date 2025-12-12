@@ -2,7 +2,16 @@
 import Layout from "../layouts/Layout.astro";
 import Game from "../components/Game.tsx";
 ---
-
+<style>
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 1,
+  'wght' 300,
+  'GRAD' 0,
+  'opsz' 20
+}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=settings" />
 <Layout>
   <Game client:only />
 </Layout>

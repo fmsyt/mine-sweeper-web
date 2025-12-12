@@ -4,7 +4,7 @@ import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import type { Cell } from "../componentstypes";
 import { useGame } from "../contexts/GameContext";
 
-const showDebugLogs = import.meta.env.DEV && true;
+const showDebugLogs = import.meta.env.DEV && false;
 const showDebugOnConsole = import.meta.env.DEV && false;
 
 type CellOpenPromise = Promise<void>;
