@@ -40,8 +40,8 @@ function GameInner() {
 
       <dialog ref={dialogRef} className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">設定</h3>
-          <p className="py-4 flex flex-col gap-4">
+          <div className="font-bold text-lg">プレイ設定</div>
+          <div className="py-4 flex flex-col gap-4">
             <label className="label">
               <input
                 type="checkbox"
@@ -51,11 +51,11 @@ function GameInner() {
               />
               アニメーション
             </label>
-            <label className="">
-              <div className="w-full">長押し時間: {holdToFlagDurationMs}ms</div>
+            <label className="label flex flex-col items-start gap-2">
+              <div>長押し時間: {holdToFlagDurationMs}ms</div>
               <input
                 type="range"
-                className="slider"
+                className="slider w-full"
                 value={holdToFlagDurationMs}
                 onChange={(e) =>
                   setHoldToFlagDurationMs(Number(e.target.value))
@@ -65,24 +65,26 @@ function GameInner() {
                 step="50"
               />
             </label>
-          </p>
+          </div>
         </div>
         <form method="dialog" className="modal-backdrop">
           <button type="submit">close</button>
         </form>
       </dialog>
 
-      <div className="fab">
-        <button
-          type="button"
-          className="btn btn-lg btn-circle btn-info"
-          onClick={() => {
-            dialogRef.current?.showModal();
-          }}
-        >
-          <span className="material-symbols-outlined">settings</span>
-        </button>
-      </div>
+      {false && (
+        <div className="fab">
+          <button
+            type="button"
+            className="btn btn-lg btn-circle btn-info"
+            onClick={() => {
+              dialogRef.current?.showModal();
+            }}
+          >
+            <span className="material-symbols-outlined">settings</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 }
