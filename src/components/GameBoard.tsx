@@ -1,5 +1,5 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: cellKey */
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import type { Cell } from "../componentstypes";
 import { useGame } from "../contexts/GameContext";
@@ -30,8 +30,8 @@ export function GameBoard() {
 
   const { logs, addLog, clearLogs } = useLogger();
 
-  const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const contentRef = useRef<HTMLDivElement | null>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const [disablePanZoom, setDisablePanZoom] = useState(false);
 
   const checkDisablePanZoom = useCallback(() => {
@@ -49,20 +49,27 @@ export function GameBoard() {
     return matchWidth && matchHeight;
   }, []);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: checkDisablePanZoom only depends on refs and rows/cols
-  useEffect(() => {
+  useLayoutEffect(() => {
     const handler = (_e: UIEvent) => {
       const shouldDisable = checkDisablePanZoom();
       setDisablePanZoom(shouldDisable);
     };
 
-    setDisablePanZoom(checkDisablePanZoom());
     window.addEventListener("resize", handler);
+    const observer = new ResizeObserver(() => {
+      const shouldDisable = checkDisablePanZoom();
+      setDisablePanZoom(shouldDisable);
+    });
+
+    if (wrapperRef.current) {
+      observer.observe(wrapperRef.current);
+    }
 
     return () => {
       window.removeEventListener("resize", handler);
+      observer.disconnect();
     };
-  }, [checkDisablePanZoom, rows, cols]);
+  }, [checkDisablePanZoom]);
 
   const controllerRef = useRef<{
     abort: () => void;
@@ -174,6 +181,7 @@ export function GameBoard() {
     <>
       <div ref={wrapperRef}>
         <TransformWrapper
+          key={[rows, cols, disablePanZoom].join("-")}
           disabled={disablePanZoom}
           smooth={false}
           centerOnInit={true}
