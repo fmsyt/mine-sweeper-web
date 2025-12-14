@@ -219,17 +219,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
     const newBoard = board.map((row) => row.map((cell) => ({ ...cell })));
     const cellKey = `${r}-${c}`;
 
-    if (newBoard[r][c].state === "closed") {
-      newBoard[r][c].state = "flagged";
-      setFlagCount((prev) => prev + 1);
-      playClickSound();
-    } else if (newBoard[r][c].state === "flagged") {
-      newBoard[r][c].state = "closed";
-      setFlagCount((prev) => prev - 1);
-      playClickSound();
-    }
-
-    if (showFlagAnimation) {
+    const animation = () => {
       setAnimatingFlags((prev) => new Set(prev).add(cellKey));
       setTimeout(() => {
         setAnimatingFlags((prev) => {
@@ -238,6 +228,24 @@ export function GameProvider({ children }: { children: ReactNode }) {
           return next;
         });
       }, 400);
+    };
+
+    if (newBoard[r][c].state === "closed") {
+      newBoard[r][c].state = "flagged";
+      setFlagCount((prev) => prev + 1);
+      playClickSound();
+
+      if (showFlagAnimation) {
+        animation();
+      }
+    } else if (newBoard[r][c].state === "flagged") {
+      newBoard[r][c].state = "closed";
+      setFlagCount((prev) => prev - 1);
+      playClickSound();
+
+      if (showFlagAnimation) {
+        animation();
+      }
     }
 
     setBoard(newBoard);
