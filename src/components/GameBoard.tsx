@@ -251,9 +251,7 @@ export function GameBoard() {
                     const classNames = [
                       "cell",
                       getCellClass(cell, r, c, board, gameOver, rows),
-                      ...(isAnimating && cell.state === "flagged"
-                        ? ["flag-drop"]
-                        : []),
+                      ...(isAnimating ? ["flag-drop"] : []),
                     ];
 
                     return (

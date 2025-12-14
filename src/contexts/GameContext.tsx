@@ -222,22 +222,22 @@ export function GameProvider({ children }: { children: ReactNode }) {
     if (newBoard[r][c].state === "closed") {
       newBoard[r][c].state = "flagged";
       setFlagCount((prev) => prev + 1);
-
-      if (showFlagAnimation) {
-        setAnimatingFlags((prev) => new Set(prev).add(cellKey));
-        setTimeout(() => {
-          setAnimatingFlags((prev) => {
-            const next = new Set(prev);
-            next.delete(cellKey);
-            return next;
-          });
-        }, 400);
-      }
       playClickSound();
     } else if (newBoard[r][c].state === "flagged") {
       newBoard[r][c].state = "closed";
       setFlagCount((prev) => prev - 1);
       playClickSound();
+    }
+
+    if (showFlagAnimation) {
+      setAnimatingFlags((prev) => new Set(prev).add(cellKey));
+      setTimeout(() => {
+        setAnimatingFlags((prev) => {
+          const next = new Set(prev);
+          next.delete(cellKey);
+          return next;
+        });
+      }, 400);
     }
 
     setBoard(newBoard);
