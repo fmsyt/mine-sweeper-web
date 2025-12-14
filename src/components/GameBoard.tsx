@@ -1,5 +1,5 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: cellKey */
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import type { Cell } from "../componentstypes";
 import { useGame } from "../contexts/GameContext";
@@ -29,6 +29,40 @@ export function GameBoard() {
   } = useGame();
 
   const { logs, addLog, clearLogs } = useLogger();
+
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const [disablePanZoom, setDisablePanZoom] = useState(false);
+
+  const checkDisablePanZoom = useCallback(() => {
+    if (!wrapperRef.current || !contentRef.current) {
+      setDisablePanZoom(false);
+      return false;
+    }
+
+    const wrapperRect = wrapperRef.current.getBoundingClientRect();
+    const contentRect = contentRef.current.getBoundingClientRect();
+
+    const matchWidth = contentRect.width <= wrapperRect.width;
+    const matchHeight = contentRect.height <= wrapperRect.height;
+
+    return matchWidth && matchHeight;
+  }, []);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: checkDisablePanZoom only depends on refs and rows/cols
+  useEffect(() => {
+    const handler = (_e: UIEvent) => {
+      const shouldDisable = checkDisablePanZoom();
+      setDisablePanZoom(shouldDisable);
+    };
+
+    setDisablePanZoom(checkDisablePanZoom());
+    window.addEventListener("resize", handler);
+
+    return () => {
+      window.removeEventListener("resize", handler);
+    };
+  }, [checkDisablePanZoom, rows, cols]);
 
   const controllerRef = useRef<{
     abort: () => void;
@@ -138,180 +172,183 @@ export function GameBoard() {
 
   return (
     <>
-      <TransformWrapper
-        smooth={false}
-        centerOnInit={true}
-        doubleClick={{ disabled: true }}
-        minScale={0.1}
-        maxScale={4}
-        initialScale={1}
-        panning={{ velocityDisabled: true, allowRightClickPan: false }}
-        onPanningStart={(_ref, e) => {
-          addLog({ message: `${e.type}: onPanningStart` });
-          // setLockState(true, "onPanningStart");
-        }}
-        onPanning={(_ref, e) => {
-          addLog({ message: `${e.type}: onPanning` });
-          abortLongPressPromise();
-        }}
-        onPinchingStart={(_ref, e) => {
-          addLog({ message: `${e.type}: onPinchingStart` });
-          abortLongPressPromise();
-        }}
-        onZoomStart={(_ref, e) => {
-          addLog({ message: `${e.type}: onZoomStart` });
-          abortLongPressPromise();
-        }}
-        onWheelStart={(_ref, e) => {
-          addLog({ message: `${e.type}: onWheelStart` });
-          abortLongPressPromise();
-        }}
-      >
-        <TransformComponent
-          wrapperStyle={{
-            maxWidth: "100svw",
-            maxHeight: "70svh",
+      <div ref={wrapperRef}>
+        <TransformWrapper
+          disabled={disablePanZoom}
+          smooth={false}
+          centerOnInit={true}
+          doubleClick={{ disabled: true }}
+          minScale={0.1}
+          maxScale={4}
+          initialScale={1}
+          panning={{ velocityDisabled: true, allowRightClickPan: false }}
+          onPanningStart={(_ref, e) => {
+            addLog({ message: `${e.type}: onPanningStart` });
+          }}
+          onPanning={(_ref, e) => {
+            addLog({ message: `${e.type}: onPanning` });
+            abortLongPressPromise();
+          }}
+          onPinchingStart={(_ref, e) => {
+            addLog({ message: `${e.type}: onPinchingStart` });
+            abortLongPressPromise();
+          }}
+          onZoomStart={(_ref, e) => {
+            addLog({ message: `${e.type}: onZoomStart` });
+            abortLongPressPromise();
+          }}
+          onWheelStart={(_ref, e) => {
+            addLog({ message: `${e.type}: onWheelStart` });
+            abortLongPressPromise();
           }}
         >
-          <div
-            className="board"
-            style={{
-              display: "grid",
-              gap: "0",
-              gridTemplateColumns: `repeat(${cols}, var(--cell-size)`,
-              gridTemplateRows: `repeat(${rows}, var(--cell-size)`,
+          <TransformComponent
+            wrapperStyle={{
+              maxWidth: "100svw",
+              maxHeight: "70svh",
             }}
           >
-            {!board &&
-              Array(rows)
-                .fill(null)
-                .map((_, r) =>
-                  Array(cols)
-                    .fill(null)
-                    .map((_, c) => (
+            <div
+              className="board"
+              style={{
+                display: "grid",
+                gap: "0",
+                gridTemplateColumns: `repeat(${cols}, var(--cell-size)`,
+                gridTemplateRows: `repeat(${rows}, var(--cell-size)`,
+              }}
+              ref={contentRef}
+            >
+              {!board &&
+                Array(rows)
+                  .fill(null)
+                  .map((_, r) =>
+                    Array(cols)
+                      .fill(null)
+                      .map((_, c) => (
+                        <button
+                          type="button"
+                          key={`init-${r}-${c}`}
+                          className="cell initial-cell cell-closed"
+                          onMouseUp={() => handleCellClick(r, c)}
+                        />
+                      )),
+                  )}
+
+              {!!board &&
+                board.map((row, r) =>
+                  row.map((cell, c) => {
+                    const cellKey = `${r}-${c}`;
+                    const isAnimating = animatingFlags.has(cellKey);
+
+                    const classNames = [
+                      "cell",
+                      getCellClass(cell, r, c, board, gameOver, rows),
+                      ...(isAnimating && cell.state === "flagged"
+                        ? ["flag-drop"]
+                        : []),
+                    ];
+
+                    return (
                       <button
                         type="button"
-                        key={`init-${r}-${c}`}
-                        className="cell initial-cell cell-closed"
-                        onMouseUp={() => handleCellClick(r, c)}
-                      />
-                    )),
-                )}
-
-            {!!board &&
-              board.map((row, r) =>
-                row.map((cell, c) => {
-                  const cellKey = `${r}-${c}`;
-                  const isAnimating = animatingFlags.has(cellKey);
-
-                  const classNames = [
-                    "cell",
-                    getCellClass(cell, r, c, board, gameOver, rows),
-                    ...(isAnimating && cell.state === "flagged"
-                      ? ["flag-drop"]
-                      : []),
-                  ];
-
-                  return (
-                    <button
-                      type="button"
-                      key={cellKey}
-                      className={classNames.join(" ")}
-                      onPointerDown={(e) => {
-                        addLog({
-                          message: `${e.type}: pointerType: ${e.pointerType}`,
-                        });
-                        if (e.pointerType === "mouse") {
-                          // onMouseDownで処理するので無視
-                          return;
-                        }
-                        e.preventDefault();
-
-                        handlePointerDown(r, c);
-                      }}
-                      onPointerUp={(e) => {
-                        addLog({ message: e.type });
-                        if (e.pointerType === "mouse") {
-                          // onMouseUpで処理するのでので無視
-                          return;
-                        }
-                        e.preventDefault();
-                        handleChangeCellState(() => {
-                          handleCellClick(r, c);
-                        });
-
-                        handleCleanup();
-                      }}
-                      onMouseDown={(e) => {
-                        addLog({ message: e.type });
-                        lastMouseButtonRef.current = e.button;
-                        handlePointerDown(r, c);
-                      }}
-                      onMouseUp={(e) => {
-                        addLog({ message: e.type });
-
-                        if (lastMouseButtonRef.current === null) {
+                        key={cellKey}
+                        className={classNames.join(" ")}
+                        onPointerDown={(e) => {
                           addLog({
-                            message: `No mouse button recorded, ignoring onMouseUp`,
+                            message: `${e.type}: pointerType: ${e.pointerType}`,
                           });
-                          return;
-                        }
+                          if (e.pointerType === "mouse") {
+                            // onMouseDownで処理するので無視
+                            return;
+                          }
+                          e.preventDefault();
 
-                        // 最後に押されたボタンに応じて処理を分岐
-                        const button = lastMouseButtonRef.current;
-                        lastMouseButtonRef.current = null;
+                          handlePointerDown(r, c);
+                        }}
+                        onPointerUp={(e) => {
+                          addLog({ message: e.type });
+                          if (e.pointerType === "mouse") {
+                            // onMouseUpで処理するのでので無視
+                            return;
+                          }
+                          e.preventDefault();
+                          handleChangeCellState(() => {
+                            handleCellClick(r, c);
+                          });
 
-                        switch (button) {
-                          case 0: // 左クリック
-                            // handleChangeCellState(() => handleCellOpen(r, c));
-                            handleChangeCellState(() => {
-                              addLog({
-                                message: `💣Cell open on cell (${r}, ${c})`,
+                          handleCleanup();
+                        }}
+                        onMouseDown={(e) => {
+                          addLog({ message: e.type });
+                          lastMouseButtonRef.current = e.button;
+                          handlePointerDown(r, c);
+                        }}
+                        onMouseUp={(e) => {
+                          addLog({ message: e.type });
+
+                          if (lastMouseButtonRef.current === null) {
+                            addLog({
+                              message: `No mouse button recorded, ignoring onMouseUp`,
+                            });
+                            return;
+                          }
+
+                          // 最後に押されたボタンに応じて処理を分岐
+                          const button = lastMouseButtonRef.current;
+                          lastMouseButtonRef.current = null;
+
+                          switch (button) {
+                            case 0: // 左クリック
+                              // handleChangeCellState(() => handleCellOpen(r, c));
+                              handleChangeCellState(() => {
+                                addLog({
+                                  message: `💣Cell open on cell (${r}, ${c})`,
+                                });
+                                handleCellClick(r, c);
                               });
-                              handleCellClick(r, c);
-                            });
-                            break;
+                              break;
 
-                          case 2: // 右クリック
-                            handleChangeCellState(() => {
-                              handleSetFlag(r, c);
-                            });
-                            break;
-                        }
+                            case 2: // 右クリック
+                              handleChangeCellState(() => {
+                                handleSetFlag(r, c);
+                              });
+                              break;
+                          }
 
-                        handleCleanup();
-                      }}
-                      onContextMenu={(e) => {
-                        addLog({ message: e.type });
-                        // コンテキストメニューを表示しない
-                        e.preventDefault();
-                      }}
-                      onTouchStart={(e) => {
-                        addLog({
-                          message: `${e.type}: touches: ${e.touches.length}`,
-                        });
-                        // 複数指でのタッチはロック
-                        if (e.touches.length > 1) {
+                          handleCleanup();
+                        }}
+                        onContextMenu={(e) => {
+                          addLog({ message: e.type });
+                          // コンテキストメニューを表示しない
+                          e.preventDefault();
+                        }}
+                        onTouchStart={(e) => {
+                          addLog({
+                            message: `${e.type}: touches: ${e.touches.length}`,
+                          });
+                          // 複数指でのタッチはロック
+                          if (e.touches.length > 1) {
+                            abortLongPressPromise();
+                          }
+                        }}
+                        onTouchMove={(e) => {
+                          addLog({ message: e.type });
+                          // スクロールなどで指が動いたらロック
                           abortLongPressPromise();
-                        }
-                      }}
-                      onTouchMove={(e) => {
-                        addLog({ message: e.type });
-                        // スクロールなどで指が動いたらロック
-                        abortLongPressPromise();
-                      }}
-                      onTouchEnd={(e) => {
-                        addLog({
-                          message: `${e.type}: touches: ${e.touches.length}`,
-                        });
-                      }}
-                    />
-                  );
-                }),
-              )}
-          </div>
-        </TransformComponent>
-      </TransformWrapper>
+                        }}
+                        onTouchEnd={(e) => {
+                          addLog({
+                            message: `${e.type}: touches: ${e.touches.length}`,
+                          });
+                        }}
+                      />
+                    );
+                  }),
+                )}
+            </div>
+          </TransformComponent>
+        </TransformWrapper>
+      </div>
 
       {showDebugLogs && (
         <div className="flex flex-col items-center mt-4 p-2 border border-gray-300 rounded w-full">
