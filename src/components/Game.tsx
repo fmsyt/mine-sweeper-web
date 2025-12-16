@@ -20,7 +20,15 @@ function GameInner() {
 
   return (
     <div className="flex flex-col align-center items-center justify-center gap-4 h-svh">
-      {!board && <DifficultySettings />}
+      <div
+        className="transition-all duration-500 ease-in-out overflow-hidden"
+        style={{
+          maxHeight: board ? "0px" : "500px",
+          pointerEvents: board ? "none" : "auto",
+        }}
+      >
+        <DifficultySettings />
+      </div>
 
       <div className="grid grid-cols-3 flex-col gap-4 items-center justify-items-center w-fit select-none touch-none">
         <GameStatus />
