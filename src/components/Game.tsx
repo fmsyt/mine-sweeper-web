@@ -23,7 +23,7 @@ function GameInner() {
       <div
         className="transition-all duration-500 ease-in-out overflow-hidden"
         style={{
-          maxHeight: board ? "0px" : "500px",
+          maxHeight: board ? "0px" : "300px",
           pointerEvents: board ? "none" : "auto",
         }}
       >
