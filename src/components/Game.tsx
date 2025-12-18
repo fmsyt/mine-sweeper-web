@@ -47,7 +47,7 @@ function GameInner() {
         <div className="fab">
           <button
             type="button"
-            className="btn btn-lg btn-circle btn-info"
+            className="btn btn-lg btn-circle btn-default"
             onClick={() => {
               dialogRef.current?.showModal();
             }}
