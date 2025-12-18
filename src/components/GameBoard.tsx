@@ -1,8 +1,8 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: cellKey */
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
-import type { Cell } from "../componentstypes";
-import { useGame } from "../contexts/GameContext";
+import type { Cell } from "./game/types";
+import { useGame } from "./game/GameContext";
 
 const showDebugLogs = import.meta.env.DEV && false;
 const showDebugOnConsole = import.meta.env.DEV && false;

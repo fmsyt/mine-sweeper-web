@@ -1,3 +1,5 @@
+import type { difficultyMap } from "./constants";
+
 export type CellState = "closed" | "opened" | "flagged";
 
 export type Cell = {
@@ -6,7 +8,7 @@ export type Cell = {
   adjacentMines: number;
 };
 
-export type Difficulty = "beginner" | "intermediate" | "expert" | "custom";
+export type DifficultyKey = (typeof difficultyMap)[number]["key"];
 
 export type GameConfig = {
   rows: number;

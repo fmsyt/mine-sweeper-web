@@ -1,4 +1,4 @@
-import type { Cell, CellState } from "../componentstypes";
+import type { Cell, CellState } from "./game/types";
 
 export const initializeBoard = (
   rows: number,

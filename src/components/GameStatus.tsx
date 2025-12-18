@@ -1,4 +1,4 @@
-import { useGame } from "../contexts/GameContext";
+import { useGame } from "./game/GameContext";
 import { DigitDisplay } from "./DigitDisplay";
 
 export function GameStatus() {

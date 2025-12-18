@@ -1,9 +1,9 @@
-import { useCallback } from "react";
-import type { Difficulty } from "../componentstypes";
-import { useGame } from "../contexts/GameContext";
+import { difficultyMap } from "./game/constants";
+import { useGame } from "./game/GameContext";
 
 export function DifficultySettings() {
   const {
+    board,
     difficulty,
     rows,
     cols,
@@ -16,55 +16,29 @@ export function DifficultySettings() {
     setHoldToFlagDurationMs,
   } = useGame();
 
-  const makeActiveClass = useCallback(
-    (label: Difficulty) => {
-      const classList = ["btn", "btn-primary", "flex-1", "text-nowrap"];
-      if (difficulty === label) {
-        classList.push("btn-active");
-      }
-
-      return classList.join(" ");
-    },
-    [difficulty],
-  );
-
   return (
-    <div className="card card-border card-medium w-full bg-base-200 shadow-md">
-      <div className="card-body flex flex-col gap-4">
-        <div className="flex flex-row gap-2 justify-center flex-wrap">
-          <button
-            type="button"
-            className={makeActiveClass("beginner")}
-            onClick={() => handleDifficultyChange("beginner")}
-          >
-            初級
-          </button>
-          <button
-            type="button"
-            className={makeActiveClass("intermediate")}
-            onClick={() => handleDifficultyChange("intermediate")}
-          >
-            中級
-          </button>
-          <button
-            type="button"
-            className={makeActiveClass("expert")}
-            onClick={() => handleDifficultyChange("expert")}
-          >
-            上級
-          </button>
-          <button
-            type="button"
-            className={makeActiveClass("custom")}
-            onClick={() => handleDifficultyChange("custom")}
-          >
-            カスタム
-          </button>
-        </div>
+    <div className="flex flex-col gap-4">
+      <div className="font-bold text-lg">難易度</div>
+      <div className="flex flex-row gap-4 justify-center flex-wrap">
+        {Object.values(difficultyMap).map(({ key, label }) => (
+          <label key={key} className="label">
+            <input
+              type="radio"
+              name="difficulty"
+              className="radio"
+              defaultChecked={difficulty === key}
+              onClick={() => handleDifficultyChange(key)}
+              disabled={Boolean(board)}
+            />
+            <span>{label}</span>
+          </label>
+        ))}
+      </div>
 
-        <div className="flex flex-col gap-4 justify-center custom-settings">
-          <label className="input input-xs">
-            <span className="label">Rows</span>
+      {difficulty === "custom" && (
+        <div className="flex flex-col gap-4 justify-center">
+          <label className="input input-sm">
+            <span className="label w-[8em]">Rows</span>
             <input
               type="number"
               value={rows}
@@ -73,10 +47,11 @@ export function DifficultySettings() {
               }
               min="5"
               max="30"
+              disabled={difficulty !== "custom"}
             />
           </label>
-          <label className="input input-xs">
-            <span className="label">Columns</span>
+          <label className="input input-sm">
+            <span className="label w-[8em]">Columns</span>
             <input
               type="number"
               value={cols}
@@ -85,10 +60,11 @@ export function DifficultySettings() {
               }
               min="5"
               max="30"
+              disabled={difficulty !== "custom"}
             />
           </label>
-          <label className="input input-xs">
-            <span className="label">Mines</span>
+          <label className="input input-sm">
+            <span className="label w-[8em]">Mines</span>
             <input
               type="number"
               value={mineCount}
@@ -97,37 +73,43 @@ export function DifficultySettings() {
               }
               min="1"
               max={rows * cols - 9}
+              disabled={difficulty !== "custom"}
             />
           </label>
         </div>
+      )}
 
-        <div className="animation-toggle">
-          <label className="label">
-            <input
-              type="checkbox"
-              className="checkbox"
-              checked={showFlagAnimation}
-              onChange={toggleFlagAnimation}
-            />
-            アニメーション
-          </label>
-        </div>
+      <div className="font-bold text-lg mt-4">タッチ操作</div>
+      <fieldset className="fieldset">
+        <div className="fieldset-legend">アニメーション</div>
+        <label className="label ">
+          <input
+            type="checkbox"
+            className="checkbox"
+            checked={showFlagAnimation}
+            onChange={toggleFlagAnimation}
+          />
+          フラグ設置アニメーションを表示する
+        </label>
+      </fieldset>
 
-        <div className="hold-duration-setting">
-          <label className="flex flex-row justify-center align-center gap-2">
-            長押し時間: {holdToFlagDurationMs}ms
-            <input
-              type="range"
-              className="slider"
-              value={holdToFlagDurationMs}
-              onChange={(e) => setHoldToFlagDurationMs(Number(e.target.value))}
-              min="100"
-              max="1000"
-              step="50"
-            />
-          </label>
+      <fieldset className="fieldset">
+        <div className="fieldset-legend">
+          長押し時間: {holdToFlagDurationMs}ms
         </div>
-      </div>
+        <input
+          type="range"
+          className="slider"
+          value={holdToFlagDurationMs}
+          onChange={(e) => setHoldToFlagDurationMs(Number(e.target.value))}
+          min="100"
+          max="1000"
+          step="50"
+        />
+        <p className="label">
+          セルの長押しでフラグを設置するまでの時間を調整します。
+        </p>
+      </fieldset>
     </div>
   );
 }

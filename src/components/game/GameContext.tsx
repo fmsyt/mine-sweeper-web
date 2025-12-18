@@ -6,19 +6,19 @@ import {
   useLayoutEffect,
   useState,
 } from "react";
-import { DIFFICULTY_PRESETS } from "../components/constants";
+import { useLocalStorage } from "../../contexts/localStorage";
+import { playClickSound, preloadClickSound } from "../../utils/audio";
 import {
   checkWin,
   initializeBoard,
   openCell,
   revealAllMines,
-} from "../components/gameLogic";
-import type { Cell, Difficulty } from "../componentstypes";
-import { playClickSound, preloadClickSound } from "../utils/audio";
-import { useLocalStorage } from "./localStorage";
+} from "../gameLogic";
+import { DIFFICULTY_PRESETS } from "./constants";
+import type { Cell, DifficultyKey } from "./types";
 
 interface GameContextType {
-  difficulty: Difficulty;
+  difficulty: DifficultyKey;
   rows: number;
   cols: number;
   mineCount: number;
@@ -31,7 +31,7 @@ interface GameContextType {
   showFlagAnimation: boolean;
   holdToFlagDurationMs: number;
   animatingFlags: Set<string>;
-  handleDifficultyChange: (newDifficulty: Difficulty) => void;
+  handleDifficultyChange: (newDifficulty: DifficultyKey) => void;
   handleCustomChange: (type: "rows" | "cols" | "mines", value: number) => void;
   toggleFlagAnimation: () => void;
   setHoldToFlagDurationMs: (value: number) => void;
@@ -45,7 +45,7 @@ const GameContext = createContext<GameContextType | undefined>(undefined);
 export function GameProvider({ children }: { children: ReactNode }) {
   const { config, updateConfig } = useLocalStorage();
 
-  const [difficulty, setDifficulty] = useState<Difficulty>("beginner");
+  const [difficulty, setDifficulty] = useState<DifficultyKey>("beginner");
   const [rows, setRows] = useState(config.rows);
   const [cols, setCols] = useState(config.cols);
   const [mineCount, setMineCount] = useState(config.mines);
@@ -79,7 +79,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
     return () => clearInterval(timer);
   }, [gameOver, gameWon, firstClick]);
 
-  const handleDifficultyChange = (newDifficulty: Difficulty) => {
+  const handleDifficultyChange = (newDifficulty: DifficultyKey) => {
     setDifficulty(newDifficulty);
     if (newDifficulty !== "custom") {
       const preset = DIFFICULTY_PRESETS[newDifficulty];

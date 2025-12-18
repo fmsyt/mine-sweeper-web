@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import type { GameConfig } from "../componentstypes";
+import type { GameConfig } from "../components/game/types";
 
 const STORAGE_KEY = "minesweeper-config";
 
