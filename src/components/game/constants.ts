@@ -9,21 +9,30 @@ export const DIFFICULTY_PRESETS: Record<
   expert: { rows: 16, cols: 30, mines: 99 },
 };
 
-export const difficultyMap = [
+type DifficultyOption = {
+  id: DifficultyKey;
+  label: string;
+  description?: string;
+};
+
+export const difficultyMap: DifficultyOption[] = [
   {
-    key: "beginner",
+    id: "beginner",
     label: "初級",
+    description: "9x9 グリッド、10 個の地雷",
   },
   {
-    key: "intermediate",
+    id: "intermediate",
     label: "中級",
+    description: "16x16 グリッド、40 個の地雷",
   },
   {
-    key: "expert",
+    id: "expert",
     label: "上級",
+    description: "16x30 グリッド、99 個の地雷",
   },
   {
-    key: "custom",
+    id: "custom",
     label: "カスタム",
   },
 ] as const;

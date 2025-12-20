@@ -19,8 +19,8 @@ export function DifficultySettings() {
   return (
     <div className="flex flex-col gap-4">
       <div className="font-bold text-lg">難易度</div>
-      <div className="flex flex-row gap-4 justify-center flex-wrap">
-        {Object.values(difficultyMap).map(({ key, label }) => (
+      <div className="flex flex-col gap-4 justify-center flex-wrap">
+        {Object.values(difficultyMap).map(({ id: key, label, description }) => (
           <label key={key} className="label">
             <input
               type="radio"
@@ -30,7 +30,12 @@ export function DifficultySettings() {
               onClick={() => handleDifficultyChange(key)}
               disabled={Boolean(board)}
             />
-            <span>{label}</span>
+            <div className="flex-inline text-nowrap ml-2">
+              <div className="block-inline"> {label}</div>
+              <div className="block-inline ml-1 font-normal text-sm text-gray-500">
+                {description}
+              </div>
+            </div>
           </label>
         ))}
       </div>

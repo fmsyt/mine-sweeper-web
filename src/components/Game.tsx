@@ -35,7 +35,10 @@ function GameInner() {
       </div>
 
       <dialog ref={dialogRef} className="modal">
-        <div className="modal-box">
+        <div
+          className="modal-box max-h-[80svh] overflow-y-auto"
+          style={{ opacity: 0.95 }}
+        >
           <DifficultySettings />
         </div>
         <form method="dialog" className="modal-backdrop">
@@ -43,19 +46,17 @@ function GameInner() {
         </form>
       </dialog>
 
-      {true && (
-        <div className="fab">
-          <button
-            type="button"
-            className="btn btn-lg btn-circle btn-default"
-            onClick={() => {
-              dialogRef.current?.showModal();
-            }}
-          >
-            <span className="material-symbols-outlined">settings</span>
-          </button>
-        </div>
-      )}
+      <div className="fab">
+        <button
+          type="button"
+          className="btn btn-lg btn-circle btn-default"
+          onClick={() => {
+            dialogRef.current?.showModal();
+          }}
+        >
+          <span className="material-symbols-outlined">settings</span>
+        </button>
+      </div>
     </div>
   );
 }
