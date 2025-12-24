@@ -90,7 +90,7 @@ export function GameBoard() {
         const timerId = window.setTimeout(() => {
           state = "resolved";
           addLog({ message: `Long press detected on cell (${r}, ${c})` });
-          handleCellRightClick(r, c);
+          handleCellRightClick(r, c, false);
           resolve();
         }, holdToFlagDurationMs);
 

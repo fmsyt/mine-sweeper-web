@@ -36,7 +36,11 @@ interface GameContextType {
   toggleFlagAnimation: () => void;
   setHoldToFlagDurationMs: (value: number) => void;
   handleCellClick: (r: number, c: number) => void;
-  handleCellRightClick: (r: number, c: number) => void;
+  handleCellRightClick: (
+    r: number,
+    c: number,
+    disableAnimation: boolean,
+  ) => void;
   resetGame: () => void;
 }
 
@@ -66,11 +70,13 @@ export function GameProvider(props: GameProviderProps) {
   const [flagCount, setFlagCount] = useState(0);
 
   const [showFlagAnimation, setShowFlagAnimation] = useState(
-    config.showFlagAnimation ?? true,
+    props.gameConfig?.showFlagAnimation ?? config.showFlagAnimation ?? true,
   );
 
   const [holdToFlagDurationMs, setHoldToFlagDurationMs] = useState(
-    config.holdToFlagDurationMs ?? 500,
+    props.gameConfig?.holdToFlagDurationMs ??
+      config.holdToFlagDurationMs ??
+      500,
   );
   const [animatingFlags, setAnimatingFlags] = useState<Set<string>>(new Set());
 
@@ -224,7 +230,11 @@ export function GameProvider(props: GameProviderProps) {
     }
   };
 
-  const handleCellRightClick = (r: number, c: number) => {
+  const handleCellRightClick = (
+    r: number,
+    c: number,
+    disableAnimation = true,
+  ) => {
     if (gameOver || gameWon || !board || firstClick) return;
 
     const newBoard = board.map((row) => row.map((cell) => ({ ...cell })));
@@ -246,7 +256,7 @@ export function GameProvider(props: GameProviderProps) {
       setFlagCount((prev) => prev + 1);
       playClickSound();
 
-      if (showFlagAnimation) {
+      if (!disableAnimation && showFlagAnimation) {
         animation();
       }
     } else if (newBoard[r][c].state === "flagged") {
@@ -254,7 +264,7 @@ export function GameProvider(props: GameProviderProps) {
       setFlagCount((prev) => prev - 1);
       playClickSound();
 
-      if (showFlagAnimation) {
+      if (!disableAnimation && showFlagAnimation) {
         animation();
       }
     }
