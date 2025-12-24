@@ -10,7 +10,7 @@ export const DIFFICULTY_PRESETS: Record<
 };
 
 type DifficultyOption = {
-  id: DifficultyKey;
+  id: string;
   label: string;
   description?: string;
 };

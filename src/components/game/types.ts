@@ -8,7 +8,7 @@ export type Cell = {
   adjacentMines: number;
 };
 
-export type DifficultyKey = (typeof difficultyMap)[number]["key"];
+export type DifficultyKey = (typeof difficultyMap)[number]["id"];
 
 export type GameConfig = {
   rows: number;
