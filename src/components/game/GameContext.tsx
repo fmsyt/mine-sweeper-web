@@ -15,7 +15,7 @@ import {
   revealAllMines,
 } from "../gameLogic";
 import { DIFFICULTY_PRESETS } from "./constants";
-import type { Cell, DifficultyKey } from "./types";
+import type { Cell, DifficultyKey, GameConfig } from "./types";
 
 interface GameContextType {
   difficulty: DifficultyKey;
@@ -42,22 +42,33 @@ interface GameContextType {
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
-export function GameProvider({ children }: { children: ReactNode }) {
+export type GameProviderProps = {
+  children: ReactNode;
+  gameConfig?: GameConfig;
+};
+
+export function GameProvider(props: GameProviderProps) {
+  const { children } = props;
+
   const { config, updateConfig } = useLocalStorage();
 
   const [difficulty, setDifficulty] = useState<DifficultyKey>("beginner");
-  const [rows, setRows] = useState(config.rows);
-  const [cols, setCols] = useState(config.cols);
-  const [mineCount, setMineCount] = useState(config.mines);
+  const [rows, setRows] = useState(props.gameConfig?.rows || config.rows);
+  const [cols, setCols] = useState(props.gameConfig?.cols || config.cols);
+  const [mineCount, setMineCount] = useState(
+    props.gameConfig?.mines || config.mines,
+  );
   const [board, setBoard] = useState<Cell[][] | null>(null);
   const [gameOver, setGameOver] = useState(false);
   const [gameWon, setGameWon] = useState(false);
   const [firstClick, setFirstClick] = useState(true);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [flagCount, setFlagCount] = useState(0);
+
   const [showFlagAnimation, setShowFlagAnimation] = useState(
     config.showFlagAnimation ?? true,
   );
+
   const [holdToFlagDurationMs, setHoldToFlagDurationMs] = useState(
     config.holdToFlagDurationMs ?? 500,
   );
