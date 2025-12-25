@@ -39,7 +39,7 @@ interface GameContextType {
   handleCellRightClick: (
     r: number,
     c: number,
-    disableAnimation: boolean,
+    disableAnimation?: boolean,
   ) => void;
   resetGame: () => void;
 }
@@ -75,8 +75,8 @@ export function GameProvider(props: GameProviderProps) {
 
   const [holdToFlagDurationMs, setHoldToFlagDurationMs] = useState(
     props.gameConfig?.holdToFlagDurationMs ??
-      config.holdToFlagDurationMs ??
-      500,
+    config.holdToFlagDurationMs ??
+    500,
   );
   const [animatingFlags, setAnimatingFlags] = useState<Set<string>>(new Set());
 
