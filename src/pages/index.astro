@@ -14,30 +14,52 @@ import { DIFFICULTY_PRESETS } from "../components/game/constants.ts";
 .description > *:last-child {
   margin-top: none;
 }
+
+.title:before,
+.title:after {
+  content: "";
+  display: inline-block;
+
+  background-size: contain;
+  vertical-align: text-top;
+
+  width: 1em;
+  height: 1em;
+}
+.title:before {
+  background-image: url('/flag.svg');
+  margin-right: 0.25em;
+}
+.title:after {
+  background-image: url('/mine.svg');
+  margin-left: 0.25em;
+}
 </style>
 
 <Layout>
   <article class="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-base-300 to-base-100">
-    <section class="text-center space-y-12 max-w-4xl">
-      <div class="flex items-center justify-center gap-2 sm:gap-4">
-        <img src="/mine.svg" alt="" class="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20" />
-        <h1 class="text-4xl sm:text-6xl md:text-6xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent whitespace-nowrap">
-          マインスイーパー
-        </h1>
-        <img src="/flag.svg" alt="" class="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20" />
+    <section class="text-center space-y-12 max-w">
+
+      <div class="hero min-h-[50svh] justify-center">
+        <div class="hero-content text-center flex-col gap-8">
+
+          <h1 class="title font-bold text-2xl sm:text-4xl">マインスイーパー</h1>
+
+          <p class="text-base sm:text-lg md:text-xl text-base-content/80 max-w-md mx-auto px-4">
+            クラシックなマインスイーパーゲーム<br />
+            マウス操作・タッチ操作の両方に対応
+          </p>
+
+          <a
+            href="/play"
+            class="btn btn-neutral btn-wide btn-secondary"
+          >
+            ゲームを始める
+          </a>
+
+        </div>
       </div>
 
-      <p class="text-base sm:text-lg md:text-xl text-base-content/80 max-w-md mx-auto px-4">
-        クラシックなマインスイーパーゲーム<br />
-        マウス操作・タッチ操作の両方に対応
-      </p>
-
-      <a
-        href="/play"
-        class="btn btn-neutral btn-wide btn-secondary my-16"
-      >
-        ゲームを始める
-      </a>
     </section>
 
     <section class="description">
