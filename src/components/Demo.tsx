@@ -1,15 +1,17 @@
 import { GameProvider, useGame } from "./game/GameContext";
 import type { GameConfig } from "./game/types";
 import { GameBoard } from "./GameBoard";
+import { GameStatus } from "./GameStatus";
 
 function DemoInner() {
   const { resetGame } = useGame();
 
   return (
-    <div className="flex flex-col items-center justify-center gap-2 w-full">
-      <div className="max-w-full">
-        <GameBoard />
+    <div className="flex flex-col w-fit items-center justify-center gap-2">
+      <div className="flex flex-row items-center justify-between w-full">
+        <GameStatus digitCount={2} />
       </div>
+      <GameBoard />
 
       <button
         type="button"

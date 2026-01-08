@@ -63,7 +63,7 @@ import { DIFFICULTY_PRESETS } from "../components/game/constants.ts";
     </section>
 
     <section class="description">
-      <article class="text-center">
+      <article class="flex flex-col items-center justify-center gap-2">
         <h2 class="text-accent rounded mb-2">
           セルを開く
         </h2>
@@ -76,9 +76,9 @@ import { DIFFICULTY_PRESETS } from "../components/game/constants.ts";
         </p>
         <Demo client:only />
       </article>
-      <article class="text-center">
+      <article class="flex flex-col items-center justify-center gap-2">
         <h2 class="text-accent rounded mb-2 inline-flex items-center justify-center gap-1">
-          <img src="/flag.svg" alt="旗" class="w-5 h-5 inline-block" />
+          <img src="/flag.svg" alt="旗" class="w-5 h-5 inline-block" loading="lazy" />
           の設置
         </h2>
         <p class="flex items-center gap-2">

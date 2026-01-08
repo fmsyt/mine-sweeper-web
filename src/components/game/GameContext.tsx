@@ -75,8 +75,8 @@ export function GameProvider(props: GameProviderProps) {
 
   const [holdToFlagDurationMs, setHoldToFlagDurationMs] = useState(
     props.gameConfig?.holdToFlagDurationMs ??
-    config.holdToFlagDurationMs ??
-    500,
+      config.holdToFlagDurationMs ??
+      500,
   );
   const [animatingFlags, setAnimatingFlags] = useState<Set<string>>(new Set());
 
@@ -90,7 +90,7 @@ export function GameProvider(props: GameProviderProps) {
     }
 
     const timer = setInterval(() => {
-      setElapsedTime((prev) => Math.min(prev + 1, 999));
+      setElapsedTime((prev) => prev + 1);
     }, 1000);
 
     return () => clearInterval(timer);

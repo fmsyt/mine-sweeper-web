@@ -1,10 +1,13 @@
 interface DigitDisplayProps {
   value: number;
+  digitCount?: number;
 }
 
-export function DigitDisplay({ value }: DigitDisplayProps) {
+export function DigitDisplay(props: DigitDisplayProps) {
+  const { value, digitCount = 3 } = props;
+
   const clampedValue = Math.max(0, Math.min(999, value));
-  const digits = String(clampedValue).padStart(3, "0").split("");
+  const digits = String(clampedValue).padStart(digitCount, "0").split("");
 
   return (
     <div className="digit-display">
