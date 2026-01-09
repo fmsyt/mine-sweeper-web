@@ -1,3 +1,4 @@
+import mulberry32Generator from "../lib/mulberry32Generator";
 import type { Cell, CellState } from "./game/types";
 
 export const initializeBoard = (
@@ -6,6 +7,7 @@ export const initializeBoard = (
   mineCount: number,
   clickedRow: number,
   clickedCol: number,
+  seed?: number,
 ): Cell[][] => {
   const newBoard: Cell[][] = Array(rows)
     .fill(null)
@@ -20,13 +22,20 @@ export const initializeBoard = (
     );
 
   const mines = new Set<string>();
+  const rng = mulberry32Generator(seed);
+
   while (mines.size < mineCount) {
-    const r = Math.floor(Math.random() * rows);
-    const c = Math.floor(Math.random() * cols);
+    const r = Math.floor(rng.next().value * rows);
+    const c = Math.floor(rng.next().value * cols);
+
     const key = `${r},${c}`;
-    if (r === clickedRow && c === clickedCol) continue;
-    if (Math.abs(r - clickedRow) <= 1 && Math.abs(c - clickedCol) <= 1)
+    if (r === clickedRow && c === clickedCol) {
       continue;
+    }
+
+    if (Math.abs(r - clickedRow) <= 1 && Math.abs(c - clickedCol) <= 1) {
+      continue;
+    }
     mines.add(key);
   }
 
