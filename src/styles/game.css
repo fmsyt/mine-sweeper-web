@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap');
+
 @font-face {
   font-family: 'DSEG7';
   src: url('/fonts/DSEG7ClassicMini-Bold.ttf') format('truetype');
@@ -10,14 +12,14 @@
   --cell-size: 36px;
 
   --n0-image: url('/type0.svg');
-  --n1-image: url('/type1.svg');
-  --n2-image: url('/type2.svg');
-  --n3-image: url('/type3.svg');
-  --n4-image: url('/type4.svg');
-  --n5-image: url('/type5.svg');
-  --n6-image: url('/type6.svg');
-  --n7-image: url('/type7.svg');
-  --n8-image: url('/type8.svg');
+  /* --n1-image: url('/type1.svg'); */
+  /* --n2-image: url('/type2.svg'); */
+  /* --n3-image: url('/type3.svg'); */
+  /* --n4-image: url('/type4.svg'); */
+  /* --n5-image: url('/type5.svg'); */
+  /* --n6-image: url('/type6.svg'); */
+  /* --n7-image: url('/type7.svg'); */
+  /* --n8-image: url('/type8.svg'); */
 
   --mine-image: url('/mine.svg');
   --mine-red-image: url('/mine_red.svg');
@@ -25,16 +27,17 @@
   --n-closed-image: url('/closed.svg');
   --flag-image: url('/flag.svg');
 
-  /* --font-number: 'DSEG7', monospace; */
-  /* --n0-content: ''; */
-  /* --n1-content: '1'; */
-  /* --n2-content: '2'; */
-  /* --n3-content: '3'; */
-  /* --n4-content: '4'; */
-  /* --n5-content: '5'; */
-  /* --n6-content: '6'; */
-  /* --n7-content: '7'; */
-  /* --n8-content: '8'; */
+  --font-number: 'DSEG7', monospace;
+  --font-number: 'Zen Dots', monospace;
+  --n0-content: '';
+  --n1-content: '1';
+  --n2-content: '2';
+  --n3-content: '3';
+  --n4-content: '4';
+  --n5-content: '5';
+  --n6-content: '6';
+  --n7-content: '7';
+  --n8-content: '8';
 
   --n0-color: #000000;
   --n1-color: #0000ff;
@@ -74,8 +77,8 @@
   outline: none;
   position: relative;
 
-  /* font-family: 'DSEG7', monospace; */
   font-family: var(--font-number);
+  font-weight: bold;
 }
 
 .cell::before {
@@ -89,7 +92,7 @@
   background-repeat: no-repeat;
   background-position: center;
 
-  font-size: calc(var(--cell-size) - 16px);
+  font-size: calc(var(--cell-size) - 12px);
 }
 
 .cell:hover {
