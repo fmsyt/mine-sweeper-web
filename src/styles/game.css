@@ -1,6 +1,42 @@
 :root {
   --board-padding: 4px;
   --cell-size: 36px;
+
+  --type0-image: url('/type0.svg');
+  --type1-image: url('/type1.svg');
+  --type2-image: url('/type2.svg');
+  --type3-image: url('/type3.svg');
+  --type4-image: url('/type4.svg');
+  --type5-image: url('/type5.svg');
+  --type6-image: url('/type6.svg');
+  --type7-image: url('/type7.svg');
+  --type8-image: url('/type8.svg');
+
+  --mine-image: url('/mine.svg');
+  --mine-red-image: url('/mine_red.svg');
+  --mine-wrong-image: url('/mine_wrong.svg');
+  --type-closed-image: url('/closed.svg');
+  --flag-image: url('/flag.svg');
+
+  --type0-content: '';
+  --type1-content: '';
+  --type2-content: '';
+  --type3-content: '';
+  --type4-content: '';
+  --type5-content: '';
+  --type6-content: '';
+  --type7-content: '';
+  --type8-content: '';
+
+  --type0-color: #000000;
+  --type1-color: #0000FF;
+  --type2-color: #008200;
+  --type3-color: #FF0000;
+  --type4-color: #000084;
+  --type5-color: #840000;
+  --type6-color: #008284;
+  --type7-color: #000000;
+  --type8-color: #808080;
 }
 
 .game-area {
@@ -27,70 +63,98 @@
   transition: filter 0.1s ease;
   padding: 0;
   border: none;
+  outline: none;
+  position: relative;
+}
+
+.cell::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  outline: none;
 }
 
 .cell:hover {
   filter: brightness(1.3);
 }
 
-.cell-closed {
-  background-image: url('/closed.svg');
+.cell-closed::before {
+  background-image: var(--type-closed-image);
 }
 
-.cell-flag {
-  background-image: url('/flag.svg');
+.cell-flag::before {
+  background-image: var(--flag-image);
 }
 
-.cell-mine {
-  background-image: url('/mine.svg');
+.cell-mine::before {
+  background-image: var(--mine-image);
 }
 
-.cell-mine-red {
-  background-image: url('/mine_red.svg');
+.cell-mine-red::before {
+  background-image: var(--mine-red-image);
 }
 
-.cell-mine-wrong {
-  background-image: url('/mine_wrong.svg');
+.cell-mine-wrong::before {
+  background-image: var(--mine-wrong-image);
 }
 
-.cell-type0 {
-  background-image: url('/type0.svg');
+.cell-type0::before {
+  content: var(--type0-content);
+  color: var(--type0-color);
+  background-image: var(--type0-image);
 }
 
-.cell-type1 {
-  background-image: url('/type1.svg');
+.cell-type1::before {
+  content: var(--type1-content);
+  color: var(--type1-color);
+  background-image: var(--type1-image);
 }
 
-.cell-type2 {
-  background-image: url('/type2.svg');
+.cell-type2::before {
+  content: var(--type2-content);
+  color: var(--type2-color);
+  background-image: var(--type2-image);
 }
 
-.cell-type3 {
-  background-image: url('/type3.svg');
+.cell-type3::before {
+  content: var(--type3-content);
+  color: var(--type3-color);
+  background-image: var(--type3-image);
 }
 
-.cell-type4 {
-  background-image: url('/type4.svg');
+.cell-type4::before {
+  content: var(--type4-content);
+  color: var(--type4-color);
+  background-image: var(--type4-image);
 }
 
-.cell-type5 {
-  background-image: url('/type5.svg');
+.cell-type5::before {
+  content: var(--type5-content);
+  color: var(--type5-color);
+  background-image: var(--type5-image);
 }
 
-.cell-type6 {
-  background-image: url('/type6.svg');
+.cell-type6::before {
+  content: var(--type6-content);
+  color: var(--type6-color);
+  background-image: var(--type6-image);
 }
 
-.cell-type7 {
-  background-image: url('/type7.svg');
+.cell-type7::before {
+  content: var(--type7-content);
+  color: var(--type7-color);
+  background-image: var(--type7-image);
 }
 
-.cell-type8 {
-  background-image: url('/type8.svg');
+.cell-type8::before {
+  content: var(--type8-content);
+  color: var(--type8-color);
+  background-image: var(--type8-image);
 }
 
 .flag-drop {
