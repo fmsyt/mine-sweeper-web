@@ -102,6 +102,20 @@
   padding-top: 4px;
 }
 
+.cell::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: var(--n0-image);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: -1;
+}
+
 .cell:hover {
   filter: brightness(1.3);
 }
@@ -129,8 +143,8 @@
 .cell-type0::before {
   content: var(--n0-content, "");
   color: var(--n0-color);
-  background-image: var(--n0-image);
-  background-size: var(--number-image-size);
+  /* background-image: var(--n0-image); */
+  /* background-size: var(--number-image-size); */
 }
 
 .cell-type1::before {
