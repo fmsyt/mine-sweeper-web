@@ -92,7 +92,13 @@
   background-repeat: no-repeat;
   background-position: center;
 
-  font-size: calc(var(--cell-size) - 12px);
+  font-size: calc(var(--cell-size) - 10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding-left: 3px;
+  padding-top: 4px;
 }
 
 .cell:hover {
