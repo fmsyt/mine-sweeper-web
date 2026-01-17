@@ -1,42 +1,50 @@
+@font-face {
+  font-family: 'DSEG7';
+  src: url('/fonts/DSEG7ClassicMini-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
 :root {
   --board-padding: 4px;
   --cell-size: 36px;
 
-  --type0-image: url('/type0.svg');
-  --type1-image: url('/type1.svg');
-  --type2-image: url('/type2.svg');
-  --type3-image: url('/type3.svg');
-  --type4-image: url('/type4.svg');
-  --type5-image: url('/type5.svg');
-  --type6-image: url('/type6.svg');
-  --type7-image: url('/type7.svg');
-  --type8-image: url('/type8.svg');
+  --n0-image: url('/type0.svg');
+  --n1-image: url('/type1.svg');
+  --n2-image: url('/type2.svg');
+  --n3-image: url('/type3.svg');
+  --n4-image: url('/type4.svg');
+  --n5-image: url('/type5.svg');
+  --n6-image: url('/type6.svg');
+  --n7-image: url('/type7.svg');
+  --n8-image: url('/type8.svg');
 
   --mine-image: url('/mine.svg');
   --mine-red-image: url('/mine_red.svg');
   --mine-wrong-image: url('/mine_wrong.svg');
-  --type-closed-image: url('/closed.svg');
+  --n-closed-image: url('/closed.svg');
   --flag-image: url('/flag.svg');
 
-  --type0-content: '';
-  --type1-content: '';
-  --type2-content: '';
-  --type3-content: '';
-  --type4-content: '';
-  --type5-content: '';
-  --type6-content: '';
-  --type7-content: '';
-  --type8-content: '';
+  /* --font-number: 'DSEG7', monospace; */
+  /* --n0-content: ''; */
+  /* --n1-content: '1'; */
+  /* --n2-content: '2'; */
+  /* --n3-content: '3'; */
+  /* --n4-content: '4'; */
+  /* --n5-content: '5'; */
+  /* --n6-content: '6'; */
+  /* --n7-content: '7'; */
+  /* --n8-content: '8'; */
 
-  --type0-color: #000000;
-  --type1-color: #0000FF;
-  --type2-color: #008200;
-  --type3-color: #FF0000;
-  --type4-color: #000084;
-  --type5-color: #840000;
-  --type6-color: #008284;
-  --type7-color: #000000;
-  --type8-color: #808080;
+  --n0-color: #000000;
+  --n1-color: #0000ff;
+  --n2-color: #008200;
+  --n3-color: #ff0000;
+  --n4-color: #000084;
+  --n5-color: #840000;
+  --n6-color: #008284;
+  --n7-color: #000000;
+  --n8-color: #808080;
 }
 
 .game-area {
@@ -65,6 +73,9 @@
   border: none;
   outline: none;
   position: relative;
+
+  /* font-family: 'DSEG7', monospace; */
+  font-family: var(--font-number);
 }
 
 .cell::before {
@@ -77,6 +88,8 @@
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+
+  font-size: calc(var(--cell-size) - 16px);
 }
 
 .cell:hover {
@@ -84,7 +97,7 @@
 }
 
 .cell-closed::before {
-  background-image: var(--type-closed-image);
+  background-image: var(--n-closed-image);
 }
 
 .cell-flag::before {
@@ -104,57 +117,57 @@
 }
 
 .cell-type0::before {
-  content: var(--type0-content);
-  color: var(--type0-color);
-  background-image: var(--type0-image);
+  content: var(--n0-content, "");
+  color: var(--n0-color);
+  background-image: var(--n0-image);
 }
 
 .cell-type1::before {
-  content: var(--type1-content);
-  color: var(--type1-color);
-  background-image: var(--type1-image);
+  content: var(--n1-content, "");
+  color: var(--n1-color);
+  background-image: var(--n1-image, var(--n0-image));
 }
 
 .cell-type2::before {
-  content: var(--type2-content);
-  color: var(--type2-color);
-  background-image: var(--type2-image);
+  content: var(--n2-content, "");
+  color: var(--n2-color);
+  background-image: var(--n2-image, var(--n0-image));
 }
 
 .cell-type3::before {
-  content: var(--type3-content);
-  color: var(--type3-color);
-  background-image: var(--type3-image);
+  content: var(--n3-content, "");
+  color: var(--n3-color);
+  background-image: var(--n3-image, var(--n0-image));
 }
 
 .cell-type4::before {
-  content: var(--type4-content);
-  color: var(--type4-color);
-  background-image: var(--type4-image);
+  content: var(--n4-content, "");
+  color: var(--n4-color);
+  background-image: var(--n4-image, var(--n0-image));
 }
 
 .cell-type5::before {
-  content: var(--type5-content);
-  color: var(--type5-color);
-  background-image: var(--type5-image);
+  content: var(--n5-content, "");
+  color: var(--n5-color);
+  background-image: var(--n5-image, var(--n0-image));
 }
 
 .cell-type6::before {
-  content: var(--type6-content);
-  color: var(--type6-color);
-  background-image: var(--type6-image);
+  content: var(--n6-content, "");
+  color: var(--n6-color);
+  background-image: var(--n6-image, var(--n0-image));
 }
 
 .cell-type7::before {
-  content: var(--type7-content);
-  color: var(--type7-color);
-  background-image: var(--type7-image);
+  content: var(--n7-content, "");
+  color: var(--n7-color);
+  background-image: var(--n7-image, var(--n0-image));
 }
 
 .cell-type8::before {
-  content: var(--type8-content);
-  color: var(--type8-color);
-  background-image: var(--type8-image);
+  content: var(--n8-content, "");
+  color: var(--n8-color);
+  background-image: var(--n8-image, var(--n0-image));
 }
 
 .flag-drop {
@@ -194,55 +207,85 @@
   gap: 2px;
   background-color: #000;
   padding: 4px;
+  font-family: 'DSEG7', monospace;
 }
 
 .digit {
   width: 24px;
   height: 36px;
-  display: block;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: bold;
+  color: #ff0000;
+  line-height: 1;
 }
 
-.digit-0 {
-  background-image: url('/d0.svg');
+.digit::before {
+  content: '8';
+  color: #330000;
+  position: absolute;
 }
 
-.digit-1 {
-  background-image: url('/d1.svg');
+.digit-0::after {
+  content: '0';
+  position: relative;
+  z-index: 1;
 }
 
-.digit-2 {
-  background-image: url('/d2.svg');
+.digit-1::after {
+  content: '1';
+  position: relative;
+  z-index: 1;
 }
 
-.digit-3 {
-  background-image: url('/d3.svg');
+.digit-2::after {
+  content: '2';
+  position: relative;
+  z-index: 1;
 }
 
-.digit-4 {
-  background-image: url('/d4.svg');
+.digit-3::after {
+  content: '3';
+  position: relative;
+  z-index: 1;
 }
 
-.digit-5 {
-  background-image: url('/d5.svg');
+.digit-4::after {
+  content: '4';
+  position: relative;
+  z-index: 1;
 }
 
-.digit-6 {
-  background-image: url('/d6.svg');
+.digit-5::after {
+  content: '5';
+  position: relative;
+  z-index: 1;
 }
 
-.digit-7 {
-  background-image: url('/d7.svg');
+.digit-6::after {
+  content: '6';
+  position: relative;
+  z-index: 1;
 }
 
-.digit-8 {
-  background-image: url('/d8.svg');
+.digit-7::after {
+  content: '7';
+  position: relative;
+  z-index: 1;
 }
 
-.digit-9 {
-  background-image: url('/d9.svg');
+.digit-8::after {
+  content: '8';
+  position: relative;
+  z-index: 1;
+}
+
+.digit-9::after {
+  content: '9';
+  position: relative;
+  z-index: 1;
 }
 
 @keyframes pulse {
