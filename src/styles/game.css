@@ -10,16 +10,17 @@
 :root {
   --board-padding: 4px;
   --cell-size: 36px;
+  --number-image-size: 80%;
 
   --n0-image: url('/type0.svg');
-  /* --n1-image: url('/type1.svg'); */
-  /* --n2-image: url('/type2.svg'); */
-  /* --n3-image: url('/type3.svg'); */
-  /* --n4-image: url('/type4.svg'); */
-  /* --n5-image: url('/type5.svg'); */
-  /* --n6-image: url('/type6.svg'); */
-  /* --n7-image: url('/type7.svg'); */
-  /* --n8-image: url('/type8.svg'); */
+  --n1-image: url('/type1.svg');
+  --n2-image: url('/type2.svg');
+  --n3-image: url('/type3.svg');
+  --n4-image: url('/type4.svg');
+  --n5-image: url('/type5.svg');
+  --n6-image: url('/type6.svg');
+  --n7-image: url('/type7.svg');
+  --n8-image: url('/type8.svg');
 
   --mine-image: url('/mine.svg');
   --mine-red-image: url('/mine_red.svg');
@@ -30,14 +31,14 @@
   --font-number: 'DSEG7', monospace;
   --font-number: 'Zen Dots', monospace;
   --n0-content: '';
-  --n1-content: '1';
-  --n2-content: '2';
-  --n3-content: '3';
-  --n4-content: '4';
-  --n5-content: '5';
-  --n6-content: '6';
-  --n7-content: '7';
-  --n8-content: '8';
+  /* --n1-content: '1'; */
+  /* --n2-content: '2'; */
+  /* --n3-content: '3'; */
+  /* --n4-content: '4'; */
+  /* --n5-content: '5'; */
+  /* --n6-content: '6'; */
+  /* --n7-content: '7'; */
+  /* --n8-content: '8'; */
 
   --n0-color: #000000;
   --n1-color: #0000ff;
@@ -129,54 +130,63 @@
   content: var(--n0-content, "");
   color: var(--n0-color);
   background-image: var(--n0-image);
+  background-size: var(--number-image-size);
 }
 
 .cell-type1::before {
   content: var(--n1-content, "");
   color: var(--n1-color);
   background-image: var(--n1-image, var(--n0-image));
+  background-size: var(--number-image-size);
 }
 
 .cell-type2::before {
   content: var(--n2-content, "");
   color: var(--n2-color);
   background-image: var(--n2-image, var(--n0-image));
+  background-size: var(--number-image-size);
 }
 
 .cell-type3::before {
   content: var(--n3-content, "");
   color: var(--n3-color);
   background-image: var(--n3-image, var(--n0-image));
+  background-size: var(--number-image-size);
 }
 
 .cell-type4::before {
   content: var(--n4-content, "");
   color: var(--n4-color);
   background-image: var(--n4-image, var(--n0-image));
+  background-size: var(--number-image-size);
 }
 
 .cell-type5::before {
   content: var(--n5-content, "");
   color: var(--n5-color);
   background-image: var(--n5-image, var(--n0-image));
+  background-size: var(--number-image-size);
 }
 
 .cell-type6::before {
   content: var(--n6-content, "");
   color: var(--n6-color);
   background-image: var(--n6-image, var(--n0-image));
+  background-size: var(--number-image-size);
 }
 
 .cell-type7::before {
   content: var(--n7-content, "");
   color: var(--n7-color);
   background-image: var(--n7-image, var(--n0-image));
+  background-size: var(--number-image-size);
 }
 
 .cell-type8::before {
   content: var(--n8-content, "");
   color: var(--n8-color);
   background-image: var(--n8-image, var(--n0-image));
+  background-size: var(--number-image-size);
 }
 
 .flag-drop {

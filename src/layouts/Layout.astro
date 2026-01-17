@@ -32,7 +32,15 @@ const pageUrl = new URL(Astro.url.pathname, siteUrl).href;
 		<meta property="twitter:description" content="クラシックなマインスイーパーゲーム。マウス操作・タッチ操作の両方に対応したブラウザで遊べるマインスイーパー。" />
 		
 		<!-- Additional -->
-		<link rel="canonical" href={pageUrl} />
+    <link rel="canonical" href={pageUrl} />
+		
+		<!-- Preload game SVG assets -->
+		<link rel="preload" href="/closed.svg" as="image" type="image/svg+xml" />
+		<link rel="preload" href="/flag.svg" as="image" type="image/svg+xml" />
+		<link rel="preload" href="/mine.svg" as="image" type="image/svg+xml" />
+		<link rel="preload" href="/mine_red.svg" as="image" type="image/svg+xml" />
+		<link rel="preload" href="/mine_wrong.svg" as="image" type="image/svg+xml" />
+		<link rel="preload" href="/type0.svg" as="image" type="image/svg+xml" />
 	</head>
 	<body>
 		<slot />

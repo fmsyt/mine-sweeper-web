@@ -3,6 +3,10 @@ import Layout from "../layouts/Layout.astro";
 import Demo from "../components/Demo.tsx";
 import "../styles/game.css";
 import { DIFFICULTY_PRESETS } from "../components/game/constants.ts";
+
+const siteUrl = import.meta.env.SITE || "https://yourdomain.com";
+const pageUrl = new URL(Astro.url.pathname, siteUrl).href;
+const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent("マインスイーパーWeb - パソコンやスマホ、どこでもプレイ")}&url=${encodeURIComponent(pageUrl)}`;
 ---
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=left_click,mouse,pinch,right_click,touch_app,touch_long" />
@@ -91,6 +95,31 @@ import { DIFFICULTY_PRESETS } from "../components/game/constants.ts";
         <Demo client:only />
       </article>
     </section>
+
+    <footer class="mt-16 pb-8 text-center">
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
+        <a
+          href={twitterShareUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="link link-hover flex items-center gap-2"
+        >
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+          </svg>
+          Xでシェア
+        </a>
+        <a
+          href="/licences"
+          class="link link-hover"
+        >
+          ライセンス
+        </a>
+      </div>
+      <p class="mt-4 text-sm text-base-content/60">
+        © 2026 マインスイーパーWeb
+      </p>
+    </footer>
 
   </article>
 </Layout>
