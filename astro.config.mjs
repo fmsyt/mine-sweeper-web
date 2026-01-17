@@ -6,6 +6,7 @@ import { VitePWA } from "vite-plugin-pwa";
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://minesweeper.yotta-rc.dev",
   integrations: [react()],
 
   vite: {
