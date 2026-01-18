@@ -1,3 +1,4 @@
+import { Box, Grid, Stack } from "@mui/system";
 import { useEffect, useRef } from "react";
 import "../styles/game.css";
 import { DifficultySettings } from "./DifficultySettings";
@@ -18,21 +19,39 @@ function GameInner() {
   }, []);
 
   return (
-    <div className="flex flex-col align-center items-center justify-center gap-4 h-svh">
-      <div className="grid grid-cols-3 flex-col gap-4 items-center justify-items-center w-fit select-none touch-none">
-        <GameStatus />
+    <Stack
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 4,
+        height: "100svh",
+      }}
+      onContextMenu={(e) => e.preventDefault()}
+    >
+      <Box
+        display="grid"
+        gridTemplateRows="fit-content(100%) 1fr fit-content(100%)"
+      >
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          spacing={2}
+          mb={2}
+        >
+          <GameStatus />
+        </Stack>
 
-        <div className="col-span-3 outline outline-2 outline-gray-400">
+        <Box className="outline outline-1 outline-gray-400">
           <GameBoard />
-        </div>
+        </Box>
 
-        {gameOver && (
-          <div className="w-full text-center col-span-3">Game Over! 💥</div>
-        )}
-        {gameWon && (
-          <div className="w-full text-center col-span-3">You Win! 🎉</div>
-        )}
-      </div>
+        <Box>
+          {gameOver && "Game Over! 💥"}
+          {gameWon && "You Win! 🎉"}
+        </Box>
+      </Box>
 
       <dialog ref={dialogRef} className="modal">
         <div
@@ -46,7 +65,7 @@ function GameInner() {
         </form>
       </dialog>
 
-      <div className="fab">
+      <Box className="fab">
         <button
           type="button"
           className="btn btn-lg btn-circle btn-default"
@@ -56,8 +75,8 @@ function GameInner() {
         >
           <span className="material-symbols-outlined">settings</span>
         </button>
-      </div>
-    </div>
+      </Box>
+    </Stack>
   );
 }
 

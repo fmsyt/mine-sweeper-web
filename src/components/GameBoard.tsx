@@ -212,8 +212,8 @@ export function GameBoard() {
         >
           <TransformComponent
             wrapperStyle={{
-              maxWidth: "100svw",
-              maxHeight: "70svh",
+              maxWidth: "calc(100svw - 2rem)",
+              maxHeight: "90svh",
             }}
           >
             <div
