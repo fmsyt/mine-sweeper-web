@@ -47,7 +47,7 @@ function GameInner() {
           <GameBoard />
         </Box>
 
-        <Box>
+        <Box height="1em" sx={{ textAlign: "center" }}>
           {gameOver && "Game Over! 💥"}
           {gameWon && "You Win! 🎉"}
         </Box>
