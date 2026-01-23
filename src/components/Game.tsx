@@ -5,6 +5,7 @@ import { DifficultySettings } from "./DifficultySettings";
 import { GameBoard } from "./GameBoard";
 import { GameStatus } from "./GameStatus";
 import { GameProvider, useGame } from "./game/GameContext";
+import type { GameConfig } from "./game/types";
 
 function GameInner() {
   const { gameOver, gameWon } = useGame();
@@ -80,9 +81,15 @@ function GameInner() {
   );
 }
 
-function Game() {
+function Game(props: {
+  gameConfig?: GameConfig & {
+    seed?: number;
+    startPosition?: { r: number; c: number };
+    resetSeedOnReset?: boolean;
+  };
+}) {
   return (
-    <GameProvider>
+    <GameProvider gameConfig={props.gameConfig}>
       <GameInner />
     </GameProvider>
   );
