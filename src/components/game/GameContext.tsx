@@ -48,7 +48,11 @@ const GameContext = createContext<GameContextType | undefined>(undefined);
 
 export type GameProviderProps = {
   children: ReactNode;
-  gameConfig?: GameConfig;
+  gameConfig?: GameConfig & {
+    seed?: number;
+    startPosition?: { r: number; c: number };
+    resetSeedOnReset?: boolean;
+  };
 };
 
 export function GameProvider(props: GameProviderProps) {
@@ -57,10 +61,10 @@ export function GameProvider(props: GameProviderProps) {
   const { config, updateConfig } = useLocalStorage();
 
   const [difficulty, setDifficulty] = useState<DifficultyKey>("beginner");
-  const [rows, setRows] = useState(props.gameConfig?.rows || config.rows);
-  const [cols, setCols] = useState(props.gameConfig?.cols || config.cols);
+  const [rows, setRows] = useState(props.gameConfig?.rows ?? config.rows);
+  const [cols, setCols] = useState(props.gameConfig?.cols ?? config.cols);
   const [mineCount, setMineCount] = useState(
-    props.gameConfig?.mines || config.mines,
+    props.gameConfig?.mines ?? config.mines,
   );
   const [board, setBoard] = useState<Cell[][] | null>(null);
   const [gameOver, setGameOver] = useState(false);
@@ -68,6 +72,8 @@ export function GameProvider(props: GameProviderProps) {
   const [firstClick, setFirstClick] = useState(true);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [flagCount, setFlagCount] = useState(0);
+
+  const [seed, setSeed] = useState(props.gameConfig?.seed ?? Date.now());
 
   const [showFlagAnimation, setShowFlagAnimation] = useState(
     props.gameConfig?.showFlagAnimation ?? config.showFlagAnimation ?? true,
@@ -79,6 +85,26 @@ export function GameProvider(props: GameProviderProps) {
       500,
   );
   const [animatingFlags, setAnimatingFlags] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    if (props.gameConfig?.seed && props.gameConfig?.startPosition) {
+      const { r, c } = props.gameConfig.startPosition;
+      const newBoard = initializeBoard(rows, cols, mineCount, r, c, seed);
+      openCell(r, c, newBoard, rows, cols);
+      setBoard(newBoard);
+      setFirstClick(false);
+      if (checkWin(newBoard, rows, cols)) {
+        setGameWon(true);
+      }
+    }
+  }, [
+    props.gameConfig?.seed,
+    props.gameConfig?.startPosition,
+    rows,
+    cols,
+    mineCount,
+    seed,
+  ]);
 
   useLayoutEffect(() => {
     preloadClickSound();
@@ -143,7 +169,7 @@ export function GameProvider(props: GameProviderProps) {
     if (gameOver || gameWon) return;
 
     if (firstClick) {
-      const newBoard = initializeBoard(rows, cols, mineCount, r, c);
+      const newBoard = initializeBoard(rows, cols, mineCount, r, c, seed);
       openCell(r, c, newBoard, rows, cols);
       setBoard(newBoard);
       setFirstClick(false);
@@ -273,13 +299,29 @@ export function GameProvider(props: GameProviderProps) {
   };
 
   const resetGame = () => {
-    setBoard(null);
-    setGameOver(false);
-    setGameWon(false);
-    setFirstClick(true);
-    setElapsedTime(0);
-    setFlagCount(0);
-    setAnimatingFlags(new Set());
+    if (props.gameConfig?.seed && props.gameConfig?.startPosition) {
+      const { r, c } = props.gameConfig.startPosition;
+      const newBoard = initializeBoard(rows, cols, mineCount, r, c, seed);
+      openCell(r, c, newBoard, rows, cols);
+      setBoard(newBoard);
+      setFirstClick(false);
+      setGameOver(false);
+      setGameWon(checkWin(newBoard, rows, cols));
+      setElapsedTime(0);
+      setFlagCount(0);
+      setAnimatingFlags(new Set());
+    } else {
+      setBoard(null);
+      setGameOver(false);
+      setGameWon(false);
+      setFirstClick(true);
+      setElapsedTime(0);
+      setFlagCount(0);
+      setAnimatingFlags(new Set());
+      if (props.gameConfig?.resetSeedOnReset ?? true) {
+        setSeed(Date.now());
+      }
+    }
   };
 
   return (
