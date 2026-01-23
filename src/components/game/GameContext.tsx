@@ -31,6 +31,7 @@ interface GameContextType {
   showFlagAnimation: boolean;
   holdToFlagDurationMs: number;
   animatingFlags: Set<string>;
+  startPosition?: { r: number; c: number };
   handleDifficultyChange: (newDifficulty: DifficultyKey) => void;
   handleCustomChange: (type: "rows" | "cols" | "mines", value: number) => void;
   toggleFlagAnimation: () => void;
@@ -66,7 +67,6 @@ export function GameProvider(props: GameProviderProps) {
   const [mineCount, setMineCount] = useState(
     props.gameConfig?.mines ?? config.mines,
   );
-  const [board, setBoard] = useState<Cell[][] | null>(null);
   const [gameOver, setGameOver] = useState(false);
   const [gameWon, setGameWon] = useState(false);
   const [firstClick, setFirstClick] = useState(true);
@@ -74,6 +74,15 @@ export function GameProvider(props: GameProviderProps) {
   const [flagCount, setFlagCount] = useState(0);
 
   const [seed, setSeed] = useState(props.gameConfig?.seed ?? Date.now());
+
+  const [startPosition] = useState(props.gameConfig?.startPosition);
+
+  const [board, setBoard] = useState<Cell[][] | null>(() => {
+    if (startPosition) {
+      return initializeBoard(rows, cols, mineCount, startPosition.r, startPosition.c, seed);
+    }
+    return null;
+  });
 
   const [showFlagAnimation, setShowFlagAnimation] = useState(
     props.gameConfig?.showFlagAnimation ?? config.showFlagAnimation ?? true,
@@ -85,26 +94,6 @@ export function GameProvider(props: GameProviderProps) {
       500,
   );
   const [animatingFlags, setAnimatingFlags] = useState<Set<string>>(new Set());
-
-  useEffect(() => {
-    if (props.gameConfig?.seed && props.gameConfig?.startPosition) {
-      const { r, c } = props.gameConfig.startPosition;
-      const newBoard = initializeBoard(rows, cols, mineCount, r, c, seed);
-      openCell(r, c, newBoard, rows, cols);
-      setBoard(newBoard);
-      setFirstClick(false);
-      if (checkWin(newBoard, rows, cols)) {
-        setGameWon(true);
-      }
-    }
-  }, [
-    props.gameConfig?.seed,
-    props.gameConfig?.startPosition,
-    rows,
-    cols,
-    mineCount,
-    seed,
-  ]);
 
   useLayoutEffect(() => {
     preloadClickSound();
@@ -169,7 +158,10 @@ export function GameProvider(props: GameProviderProps) {
     if (gameOver || gameWon) return;
 
     if (firstClick) {
-      const newBoard = initializeBoard(rows, cols, mineCount, r, c, seed);
+      const newBoard = (
+        board ?? initializeBoard(rows, cols, mineCount, r, c, seed)
+      ).map((row) => row.map((cell) => ({ ...cell })));
+
       openCell(r, c, newBoard, rows, cols);
       setBoard(newBoard);
       setFirstClick(false);
@@ -299,28 +291,23 @@ export function GameProvider(props: GameProviderProps) {
   };
 
   const resetGame = () => {
-    if (props.gameConfig?.seed && props.gameConfig?.startPosition) {
-      const { r, c } = props.gameConfig.startPosition;
-      const newBoard = initializeBoard(rows, cols, mineCount, r, c, seed);
-      openCell(r, c, newBoard, rows, cols);
-      setBoard(newBoard);
-      setFirstClick(false);
-      setGameOver(false);
-      setGameWon(checkWin(newBoard, rows, cols));
-      setElapsedTime(0);
-      setFlagCount(0);
-      setAnimatingFlags(new Set());
+    setGameOver(false);
+    setGameWon(false);
+    setFirstClick(true);
+    setElapsedTime(0);
+    setFlagCount(0);
+    setAnimatingFlags(new Set());
+
+    const shouldResetSeed = props.gameConfig?.resetSeedOnReset ?? true;
+    const newSeed = shouldResetSeed ? Date.now() : seed;
+    if (shouldResetSeed) {
+        setSeed(newSeed);
+    }
+    
+    if (startPosition) {
+        setBoard(initializeBoard(rows, cols, mineCount, startPosition.r, startPosition.c, newSeed));
     } else {
-      setBoard(null);
-      setGameOver(false);
-      setGameWon(false);
-      setFirstClick(true);
-      setElapsedTime(0);
-      setFlagCount(0);
-      setAnimatingFlags(new Set());
-      if (props.gameConfig?.resetSeedOnReset ?? true) {
-        setSeed(Date.now());
-      }
+        setBoard(null);
     }
   };
 
@@ -340,6 +327,7 @@ export function GameProvider(props: GameProviderProps) {
         showFlagAnimation,
         holdToFlagDurationMs,
         animatingFlags,
+        startPosition,
         handleDifficultyChange,
         handleCustomChange,
         toggleFlagAnimation,

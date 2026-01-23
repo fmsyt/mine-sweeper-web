@@ -5,12 +5,22 @@ import Game from "../components/Game.tsx";
 const seed = Astro.url.searchParams.get("seed");
 const r = Astro.url.searchParams.get("r");
 const c = Astro.url.searchParams.get("c");
+const rows = Astro.url.searchParams.get("rows");
+const cols = Astro.url.searchParams.get("cols");
+const mines = Astro.url.searchParams.get("mines");
 
 const gameConfig = {
   seed: seed ? Number.parseInt(seed) : undefined,
   startPosition:
     r && c ? { r: Number.parseInt(r), c: Number.parseInt(c) } : undefined,
   resetSeedOnReset: false,
+  ...(rows && cols && mines
+    ? {
+        rows: Number.parseInt(rows),
+        cols: Number.parseInt(cols),
+        mines: Number.parseInt(mines),
+      }
+    : {}),
 };
 ---
 <style>

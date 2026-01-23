@@ -24,6 +24,8 @@ export function GameBoard() {
     gameOver,
     holdToFlagDurationMs,
     animatingFlags,
+    firstClick,
+    startPosition,
     handleCellClick,
     handleCellRightClick,
   } = useGame();
@@ -247,11 +249,13 @@ export function GameBoard() {
                   row.map((cell, c) => {
                     const cellKey = `${r}-${c}`;
                     const isAnimating = animatingFlags.has(cellKey);
+                    const isDimmed = firstClick && startPosition && (r !== startPosition.r || c !== startPosition.c);
 
                     const classNames = [
                       "cell",
                       getCellClass(cell, r, c, board, gameOver, rows),
                       ...(isAnimating ? ["flag-drop"] : []),
+                      ...(isDimmed ? ["dimmed"] : []),
                     ];
 
                     return (
@@ -316,7 +320,8 @@ export function GameBoard() {
 
                             case 2: // 右クリック
                               handleChangeCellState(() => {
-                                handleSetFlag(r, c);
+                                addLog({ message: `🚩Set flag on cell (${r}, ${c})` });
+                                handleCellRightClick(r, c);
                               });
                               break;
                           }

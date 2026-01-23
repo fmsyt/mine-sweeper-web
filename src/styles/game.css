@@ -119,6 +119,10 @@
   filter: brightness(1.3);
 }
 
+.cell.dimmed {
+  filter: brightness(0.7);
+}
+
 .cell-closed::before {
   background-image: var(--n-closed-image);
 }

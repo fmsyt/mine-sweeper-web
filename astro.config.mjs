@@ -8,6 +8,7 @@ import { VitePWA } from "vite-plugin-pwa";
 export default defineConfig({
   site: "https://minesweeper.yotta-rc.dev",
   integrations: [react()],
+  output: "server",
 
   vite: {
     plugins: [
