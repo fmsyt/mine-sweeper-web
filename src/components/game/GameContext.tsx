@@ -60,10 +60,10 @@ export function GameProvider(props: GameProviderProps) {
   const [difficulty, setDifficulty] = useState<DifficultyKey>(
     config.difficulty ?? "beginner",
   );
-  const [rows, setRows] = useState(props.gameConfig?.rows ?? config.rows);
-  const [cols, setCols] = useState(props.gameConfig?.cols ?? config.cols);
+  const [rows, setRows] = useState(props.gameConfig?.rows ?? config.rows ?? 0);
+  const [cols, setCols] = useState(props.gameConfig?.cols ?? config.cols ?? 0);
   const [mineCount, setMineCount] = useState(
-    props.gameConfig?.mines ?? config.mines,
+    props.gameConfig?.mines ?? config.mines ?? 0,
   );
   const [gameOver, setGameOver] = useState(false);
   const [gameWon, setGameWon] = useState(false);
