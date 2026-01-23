@@ -1,27 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Game from "../components/Game.tsx";
-
-const seed = Astro.url.searchParams.get("seed");
-const r = Astro.url.searchParams.get("r");
-const c = Astro.url.searchParams.get("c");
-const rows = Astro.url.searchParams.get("rows");
-const cols = Astro.url.searchParams.get("cols");
-const mines = Astro.url.searchParams.get("mines");
-
-const gameConfig = {
-  seed: seed ? Number.parseInt(seed) : undefined,
-  startPosition:
-    r && c ? { r: Number.parseInt(r), c: Number.parseInt(c) } : undefined,
-  resetSeedOnReset: false,
-  ...(rows && cols && mines
-    ? {
-        rows: Number.parseInt(rows),
-        cols: Number.parseInt(cols),
-        mines: Number.parseInt(mines),
-      }
-    : {}),
-};
 ---
 <style>
 .material-symbols-outlined {
@@ -34,5 +13,39 @@ const gameConfig = {
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=settings" />
 <Layout>
-  <Game client:only="react" gameConfig={gameConfig} />
+  <div id="game-root"></div>
 </Layout>
+
+<script>
+  import Game from "../components/Game.tsx";
+  import { createRoot } from "react-dom/client";
+  import { createElement } from "react";
+
+  const params = new URLSearchParams(window.location.search);
+  const seed = params.get("seed");
+  const r = params.get("r");
+  const c = params.get("c");
+  const rows = params.get("rows");
+  const cols = params.get("cols");
+  const mines = params.get("mines");
+
+  const gameConfig = {
+    seed: seed ? Number.parseInt(seed) : undefined,
+    startPosition:
+      r && c ? { r: Number.parseInt(r), c: Number.parseInt(c) } : undefined,
+    resetSeedOnReset: false,
+    ...(rows && cols && mines
+      ? {
+          rows: Number.parseInt(rows),
+          cols: Number.parseInt(cols),
+          mines: Number.parseInt(mines),
+        }
+      : {}),
+  };
+
+  const rootElement = document.getElementById("game-root");
+  if (rootElement) {
+    const root = createRoot(rootElement);
+    root.render(createElement(Game, { gameConfig }));
+  }
+</script>
