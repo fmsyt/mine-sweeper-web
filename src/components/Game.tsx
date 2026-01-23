@@ -1,4 +1,4 @@
-import { Box, Grid, Stack } from "@mui/system";
+import { Box, Stack } from "@mui/system";
 import { useEffect, useRef } from "react";
 import "../styles/game.css";
 import { DifficultySettings } from "./DifficultySettings";
@@ -81,13 +81,11 @@ function GameInner() {
   );
 }
 
-function Game(props: {
-  gameConfig?: GameConfig & {
-    seed?: number;
-    startPosition?: { r: number; c: number };
-    resetSeedOnReset?: boolean;
-  };
-}) {
+type GameProps = {
+  gameConfig?: GameConfig;
+};
+
+function Game(props: GameProps) {
   return (
     <GameProvider gameConfig={props.gameConfig}>
       <GameInner />

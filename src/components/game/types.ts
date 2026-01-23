@@ -17,4 +17,8 @@ export type GameConfig = {
 
   showFlagAnimation?: boolean;
   holdToFlagDurationMs?: number;
+
+  seed?: number;
+  resetSeedOnReset?: boolean;
+  startPosition?: { r: number; c: number };
 };

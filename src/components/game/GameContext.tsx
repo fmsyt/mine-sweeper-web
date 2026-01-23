@@ -49,11 +49,7 @@ const GameContext = createContext<GameContextType | undefined>(undefined);
 
 export type GameProviderProps = {
   children: ReactNode;
-  gameConfig?: GameConfig & {
-    seed?: number;
-    startPosition?: { r: number; c: number };
-    resetSeedOnReset?: boolean;
-  };
+  gameConfig?: GameConfig;
 };
 
 export function GameProvider(props: GameProviderProps) {
@@ -79,7 +75,14 @@ export function GameProvider(props: GameProviderProps) {
 
   const [board, setBoard] = useState<Cell[][] | null>(() => {
     if (startPosition) {
-      return initializeBoard(rows, cols, mineCount, startPosition.r, startPosition.c, seed);
+      return initializeBoard(
+        rows,
+        cols,
+        mineCount,
+        startPosition.r,
+        startPosition.c,
+        seed,
+      );
     }
     return null;
   });
@@ -90,8 +93,8 @@ export function GameProvider(props: GameProviderProps) {
 
   const [holdToFlagDurationMs, setHoldToFlagDurationMs] = useState(
     props.gameConfig?.holdToFlagDurationMs ??
-      config.holdToFlagDurationMs ??
-      500,
+    config.holdToFlagDurationMs ??
+    500,
   );
   const [animatingFlags, setAnimatingFlags] = useState<Set<string>>(new Set());
 
@@ -301,13 +304,22 @@ export function GameProvider(props: GameProviderProps) {
     const shouldResetSeed = props.gameConfig?.resetSeedOnReset ?? true;
     const newSeed = shouldResetSeed ? Date.now() : seed;
     if (shouldResetSeed) {
-        setSeed(newSeed);
+      setSeed(newSeed);
     }
-    
+
     if (startPosition) {
-        setBoard(initializeBoard(rows, cols, mineCount, startPosition.r, startPosition.c, newSeed));
+      setBoard(
+        initializeBoard(
+          rows,
+          cols,
+          mineCount,
+          startPosition.r,
+          startPosition.c,
+          newSeed,
+        ),
+      );
     } else {
-        setBoard(null);
+      setBoard(null);
     }
   };
 
