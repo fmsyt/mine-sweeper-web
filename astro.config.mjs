@@ -4,6 +4,8 @@ import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
 import { VitePWA } from "vite-plugin-pwa";
 
+import vercel from "@astrojs/vercel";
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://minesweeper.yotta-rc.dev",
@@ -60,5 +62,6 @@ export default defineConfig({
       })
     ],
   },
-});
 
+  adapter: vercel(),
+});
