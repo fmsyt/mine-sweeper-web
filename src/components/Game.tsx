@@ -1,5 +1,5 @@
 import { Box, Stack } from "@mui/system";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import "../styles/game.css";
 import { DifficultySettings } from "./DifficultySettings";
 import { GameBoard } from "./GameBoard";
@@ -7,17 +7,25 @@ import { GameStatus } from "./GameStatus";
 import { GameProvider, useGame } from "./game/GameContext";
 import type { GameConfig } from "./game/types";
 
-function GameInner() {
+type GameInnerProps = {
+  showSettingsOnStart?: boolean;
+};
+
+function GameInner(props: GameInnerProps) {
   const { gameOver, gameWon } = useGame();
 
   const dialogRef = useRef<HTMLDialogElement>(null);
   useEffect(() => {
+    if (props.showSettingsOnStart === false) {
+      return;
+    }
+
     const timer = setTimeout(() => {
       dialogRef.current?.showModal();
     }, 20);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [props.showSettingsOnStart]);
 
   return (
     <Stack
@@ -86,9 +94,20 @@ type GameProps = {
 };
 
 function Game(props: GameProps) {
+  const showSettingsOnStart = useMemo(() => {
+    if (!props.gameConfig) {
+      return true;
+    }
+
+    const requiredFields: Array<keyof GameConfig> = ["rows", "cols", "mines"];
+    return requiredFields.some(
+      (field) => props.gameConfig?.[field] === undefined,
+    );
+  }, [props.gameConfig]);
+
   return (
     <GameProvider gameConfig={props.gameConfig}>
-      <GameInner />
+      <GameInner showSettingsOnStart={showSettingsOnStart} />
     </GameProvider>
   );
 }
