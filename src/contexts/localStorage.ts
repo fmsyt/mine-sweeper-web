@@ -1,7 +1,14 @@
 import { useCallback, useState } from "react";
+import { DIFFICULTY_PRESETS } from "../components/game/constants";
 import type { GameConfig } from "../components/game/types";
 
 const STORAGE_KEY = "minesweeper-config";
+
+type GameConfigExt = GameConfig & {
+  difficulty?: string;
+};
+
+type StoredConfig = Partial<GameConfigExt>;
 
 const DEFAULT_CONFIG: GameConfig = {
   rows: 9,
@@ -11,19 +18,45 @@ const DEFAULT_CONFIG: GameConfig = {
   holdToFlagDurationMs: 300,
 };
 
-interface LocalStorageContextType {
-  config: GameConfig;
-  updateConfig: (updates: Partial<GameConfig>) => void;
+interface LocalStorageContextType<T, U = T> {
+  config: U;
+  updateConfig: (updates: Partial<T>) => void;
   resetConfig: () => void;
 }
 
-export function useLocalStorage(): LocalStorageContextType {
-  const [config, setConfig] = useState<GameConfig>(() => {
+function getDiffultyFromConfig(
+  config: Pick<GameConfig, "rows" | "cols" | "mines">,
+): string {
+  const { rows, cols, mines } = config;
+  for (const [key, preset] of Object.entries(DIFFICULTY_PRESETS)) {
+    if (
+      preset.rows === rows &&
+      preset.cols === cols &&
+      preset.mines === mines
+    ) {
+      return key;
+    }
+  }
+
+  return "custom";
+}
+
+export function useLocalStorage(): LocalStorageContextType<
+  GameConfig,
+  StoredConfig
+> {
+  const [config, setConfig] = useState<StoredConfig>(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
-        return { ...DEFAULT_CONFIG, ...parsed };
+        const config = {
+          ...DEFAULT_CONFIG,
+          ...parsed,
+          difficulty: getDiffultyFromConfig(parsed),
+        };
+
+        return config;
       }
     } catch (error) {
       console.error("Failed to load config from localStorage:", error);

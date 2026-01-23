@@ -57,7 +57,9 @@ export function GameProvider(props: GameProviderProps) {
 
   const { config, updateConfig } = useLocalStorage();
 
-  const [difficulty, setDifficulty] = useState<DifficultyKey>("beginner");
+  const [difficulty, setDifficulty] = useState<DifficultyKey>(
+    config.difficulty ?? "beginner",
+  );
   const [rows, setRows] = useState(props.gameConfig?.rows ?? config.rows);
   const [cols, setCols] = useState(props.gameConfig?.cols ?? config.cols);
   const [mineCount, setMineCount] = useState(
@@ -118,9 +120,13 @@ export function GameProvider(props: GameProviderProps) {
     setDifficulty(newDifficulty);
     if (newDifficulty !== "custom") {
       const preset = DIFFICULTY_PRESETS[newDifficulty];
-      setRows(preset.rows);
-      setCols(preset.cols);
-      setMineCount(preset.mines);
+      const { rows, cols, mines } = preset;
+
+      setRows(rows);
+      setCols(cols);
+      setMineCount(mines);
+
+      updateConfig({ rows, cols, mines });
     }
   };
 
