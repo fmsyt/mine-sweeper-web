@@ -167,6 +167,10 @@ export function GameProvider(props: GameProviderProps) {
     if (gameOver || gameWon) return;
 
     if (firstClick) {
+      if (startPosition && (r !== startPosition.r || c !== startPosition.c)) {
+        return;
+      }
+
       const newBoard = (
         board ?? initializeBoard(rows, cols, mineCount, r, c, seed)
       ).map((row) => row.map((cell) => ({ ...cell })));
