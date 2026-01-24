@@ -22,7 +22,10 @@ export const initializeBoard = (
     );
 
   const mines = new Set<string>();
-  const rng = mulberry32Generator(seed);
+
+  // console.log("seed", seed);
+  // TODO: seed の管理を改善したのち、引数に seed を追加する
+  const rng = mulberry32Generator();
 
   while (mines.size < mineCount) {
     const r = Math.floor(rng.next().value * rows);
