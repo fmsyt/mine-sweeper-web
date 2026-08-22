@@ -29,62 +29,67 @@ function GameInner(props: GameInnerProps) {
 
   return (
     <Stack
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 4,
-        height: "100svh",
-      }}
+      alignItems="center"
+      justifyContent="center"
       onContextMenu={(e) => e.preventDefault()}
     >
-      <Box
-        display="grid"
-        gridTemplateRows="fit-content(100%) 1fr fit-content(100%)"
+      <Stack
+        alignItems="center"
+        justifyContent="center"
+        sx={{
+          width: "fit-content",
+          height: "100svh",
+          overflow: "hidden",
+        }}
       >
         <Stack
           direction="row"
+          width="100%"
           justifyContent="space-between"
           alignItems="center"
           spacing={2}
-          mb={2}
         >
           <GameStatus />
         </Stack>
-
         <Box className="outline outline-1 outline-gray-400">
           <GameBoard />
         </Box>
 
-        <Box height="1em" sx={{ textAlign: "center" }}>
+        <Box
+          height="1em"
+          sx={{
+            textAlign: "center",
+            flexShrink: 0,
+          }}
+        >
           {gameOver && "Game Over! 💥"}
           {gameWon && "You Win! 🎉"}
         </Box>
-      </Box>
 
-      <dialog ref={dialogRef} className="modal">
-        <div
-          className="modal-box max-h-[80svh] overflow-y-auto"
-          style={{ opacity: 0.95 }}
-        >
-          <DifficultySettings />
-        </div>
-        <form method="dialog" className="modal-backdrop">
-          <button type="submit">close</button>
-        </form>
-      </dialog>
+        <dialog ref={dialogRef} className="modal">
+          <div
+            className="modal-box max-h-[80svh] overflow-y-auto"
+            style={{ opacity: 0.95 }}
+          >
+            <DifficultySettings />
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button type="submit">close</button>
+          </form>
+        </dialog>
 
-      <Box className="fab">
-        <button
-          type="button"
-          className="btn btn-lg btn-circle btn-default"
-          onClick={() => {
-            dialogRef.current?.showModal();
-          }}
-        >
-          <span className="material-symbols-outlined">settings</span>
-        </button>
-      </Box>
+        <Box className="fab">
+          <button
+            type="button"
+            className="btn btn-lg btn-circle btn-default"
+            onClick={() => {
+              dialogRef.current?.showModal();
+            }}
+          >
+            <span className="material-symbols-outlined">settings</span>
+          </button>
+        </Box>
+      </Stack>
     </Stack>
   );
 }

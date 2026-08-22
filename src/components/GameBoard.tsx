@@ -249,7 +249,10 @@ export function GameBoard() {
                   row.map((cell, c) => {
                     const cellKey = `${r}-${c}`;
                     const isAnimating = animatingFlags.has(cellKey);
-                    const isDimmed = firstClick && startPosition && (r !== startPosition.r || c !== startPosition.c);
+                    const isDimmed =
+                      firstClick &&
+                      startPosition &&
+                      (r !== startPosition.r || c !== startPosition.c);
 
                     const classNames = [
                       "cell",
@@ -320,7 +323,9 @@ export function GameBoard() {
 
                             case 2: // 右クリック
                               handleChangeCellState(() => {
-                                addLog({ message: `🚩Set flag on cell (${r}, ${c})` });
+                                addLog({
+                                  message: `🚩Set flag on cell (${r}, ${c})`,
+                                });
                                 handleCellRightClick(r, c);
                               });
                               break;
