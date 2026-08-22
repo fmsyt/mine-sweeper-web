@@ -12,6 +12,7 @@ export function DifficultySettings() {
     holdToFlagDurationMs,
     handleDifficultyChange,
     handleCustomChange,
+    swapRowsAndCols,
     toggleFlagAnimation,
     setHoldToFlagDurationMs,
   } = useGame();
@@ -40,49 +41,71 @@ export function DifficultySettings() {
         ))}
       </div>
 
-      {difficulty === "custom" && (
-        <div className="flex flex-col gap-4 justify-center">
-          <label className="input input-sm">
-            <span className="label w-[8em]">Rows</span>
-            <input
-              type="number"
-              value={rows}
-              onChange={(e) =>
-                handleCustomChange("rows", Number(e.target.value))
-              }
-              min="5"
-              max="30"
-              disabled={difficulty !== "custom"}
-            />
-          </label>
-          <label className="input input-sm">
-            <span className="label w-[8em]">Columns</span>
-            <input
-              type="number"
-              value={cols}
-              onChange={(e) =>
-                handleCustomChange("cols", Number(e.target.value))
-              }
-              min="5"
-              max="30"
-              disabled={difficulty !== "custom"}
-            />
-          </label>
-          <label className="input input-sm">
-            <span className="label w-[8em]">Mines</span>
-            <input
-              type="number"
-              value={mineCount}
-              onChange={(e) =>
-                handleCustomChange("mines", Number(e.target.value))
-              }
-              min="1"
-              max={rows * cols - 9}
-              disabled={difficulty !== "custom"}
-            />
-          </label>
+      <div className="flex flex-col gap-6 justify-center mt-4">
+        {/* rows - cols */}
+        <div className="flex flex-row gap-4">
+          {/* button wrapper */}
+          <div className="flex flex-col gap-6 grow">
+            <label className="floating-label shrink-0">
+              <input
+                placeholder="幅"
+                className="input input-md w-full"
+                type="number"
+                value={cols}
+                onChange={(e) =>
+                  handleCustomChange("cols", Number(e.target.value))
+                }
+                min="5"
+                max="30"
+                disabled={difficulty !== "custom"}
+              />
+              <span>幅</span>
+            </label>
+            <label className="floating-label">
+              <input
+                placeholder="高さ"
+                className="input input-md w-full"
+                type="number"
+                value={rows}
+                onChange={(e) =>
+                  handleCustomChange("rows", Number(e.target.value))
+                }
+                min="5"
+                max="30"
+                disabled={difficulty !== "custom"}
+              />
+              <span>高さ</span>
+            </label>
+          </div>
+
+          <div className="flex items-center justify-center gap-2 shrink-0">
+            <button
+              type="button"
+              className="btn btn-sm btn-primary"
+              onClick={swapRowsAndCols}
+              disabled={Boolean(board)}
+            >
+              ↑↓
+            </button>
+          </div>
         </div>
-      )}
+
+        <label className="floating-label">
+          <input
+            placeholder="Mines"
+            className="input input-md"
+            type="number"
+            value={mineCount}
+            onChange={(e) =>
+              handleCustomChange("mines", Number(e.target.value))
+            }
+            min="1"
+            max={rows * cols - 9}
+            disabled={difficulty !== "custom"}
+          />
+          <span>地雷の数</span>
+        </label>
+      </div>
 
       <div className="font-bold text-lg mt-4">タッチ操作</div>
       <fieldset className="fieldset">
