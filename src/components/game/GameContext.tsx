@@ -34,6 +34,7 @@ interface GameContextType {
   startPosition?: { r: number; c: number };
   handleDifficultyChange: (newDifficulty: DifficultyKey) => void;
   handleCustomChange: (type: "rows" | "cols" | "mines", value: number) => void;
+  swapRowsAndCols: () => void;
   toggleFlagAnimation: () => void;
   setHoldToFlagDurationMs: (value: number) => void;
   handleCellClick: (r: number, c: number) => void;
@@ -148,6 +149,15 @@ export function GameProvider(props: GameProviderProps) {
       setMineCount(newMines);
       updateConfig({ mines: newMines });
     }
+  };
+
+  const swapRowsAndCols = () => {
+    setDifficulty("custom");
+    const newRows = cols;
+    const newCols = rows;
+    setRows(newRows);
+    setCols(newCols);
+    updateConfig({ rows: newRows, cols: newCols });
   };
 
   const toggleFlagAnimation = () => {
@@ -352,6 +362,7 @@ export function GameProvider(props: GameProviderProps) {
         startPosition,
         handleDifficultyChange,
         handleCustomChange,
+        swapRowsAndCols,
         toggleFlagAnimation,
         setHoldToFlagDurationMs: handleSetHoldToFlagDurationMs,
         handleCellClick,
