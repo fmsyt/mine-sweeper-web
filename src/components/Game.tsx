@@ -56,7 +56,7 @@ function GameInner(props: GameInnerProps) {
         </Box>
 
         <Box
-          height="1em"
+          height="24px"
           sx={{
             textAlign: "center",
             flexShrink: 0,

@@ -214,8 +214,8 @@ export function GameBoard() {
         >
           <TransformComponent
             wrapperStyle={{
-              maxWidth: "calc(100svw - 2rem)",
-              maxHeight: "90svh",
+              maxWidth: "90svw",
+              maxHeight: "calc(100svh - (32px + 4px * 2) - 24px)", // 画面の高さ - digit - "You Win!" の高さ
             }}
           >
             <div
