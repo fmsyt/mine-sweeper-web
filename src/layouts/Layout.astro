@@ -1,4 +1,5 @@
 ---
+import Analytics from "@vercel/analytics/astro";
 import "../styles/global.css";
 
 const siteUrl = import.meta.env.SITE;
@@ -49,6 +50,8 @@ const pageUrl = new URL(Astro.url.pathname, siteUrl).href;
 		<link rel="preload" href="/type6.svg" as="image" type="image/svg+xml" />
 		<link rel="preload" href="/type7.svg" as="image" type="image/svg+xml" />
 		<link rel="preload" href="/type8.svg" as="image" type="image/svg+xml" />
+
+		<Analytics />
 	</head>
 	<body>
 		<slot />
